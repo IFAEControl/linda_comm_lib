@@ -1,6 +1,3 @@
-// linda-lib.cpp : Define las funciones de la biblioteca estática.
-//
-
 #include <iostream>
 
 #include <Poco/Net/DNS.h>
@@ -8,6 +5,8 @@
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Net/SocketStream.h>
 #include <Poco/StreamCopier.h>
+
+#include "linda-lib.hpp"
 
 // TODO: Ejemplo de una función de biblioteca
 void fnlindalib()

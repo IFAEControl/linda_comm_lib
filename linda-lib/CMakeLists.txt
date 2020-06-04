@@ -16,9 +16,12 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
+target_link_libraries(${PROJECT_NAME} PocoFoundation PocoNet)
+
+add_executable(test_client "test_client.cpp")
+target_link_libraries(test_client linda-lib)
 
 add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
-
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE lindalib)
 
