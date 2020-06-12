@@ -79,6 +79,17 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# Fetch dependencies
+include(FetchContent)
+
+FetchContent_Declare(
+   gRPC
+   GIT_REPOSITORY https://github.com/grpc/grpc
+   GIT_TAG        v1.29.1
+)
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(gRPC)
+
 ################################################################################
 # Sub-projects
 ################################################################################
