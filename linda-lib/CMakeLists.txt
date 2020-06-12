@@ -12,11 +12,17 @@ set(ALL_FILES
     ${Archivos_de_origen}
 )
 
+# Protobuf
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOS})
+
 ################################################################################
 # Target
 ################################################################################
-add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
-target_link_libraries(${PROJECT_NAME} PocoFoundation PocoNet grpc++)
+add_library(${PROJECT_NAME} STATIC ${ALL_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
+target_link_libraries(${PROJECT_NAME} ${PROTOBUF_LIBRARIES} PocoFoundation PocoNet grpc++)
 
 add_executable(test_client "test_client.cpp")
 target_link_libraries(test_client linda-lib)

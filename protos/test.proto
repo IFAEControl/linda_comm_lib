@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package linda;
+
+service Test {
+rpc Echo(Null) returns (Null);
+}
+
+message Null {
+}

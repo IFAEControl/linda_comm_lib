@@ -79,6 +79,9 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# Find dependencies
+find_package(Protobuf REQUIRED)
+
 # Fetch dependencies
 include(FetchContent)
 
@@ -89,6 +92,10 @@ FetchContent_Declare(
 )
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_MakeAvailable(gRPC)
+
+# Build protos
+set(PROTOS ${CMAKE_CURRENT_SOURCE_DIR}/protos/test.proto)
+#grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTOS})
 
 ################################################################################
 # Sub-projects
