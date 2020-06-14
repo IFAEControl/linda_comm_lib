@@ -80,7 +80,12 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Find dependencies
-find_package(Protobuf REQUIRED)
+set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
+find_package(Protobuf REQUIRED
+	HINTS
+	"C:/Users/David/vcpkg/installed/x64-windows/share"
+	"C:/Users/David/vcpkg/installed/x64-windows/share/protobuf"
+	)
 
 # Fetch dependencies
 include(FetchContent)
@@ -92,6 +97,8 @@ FetchContent_Declare(
 )
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_MakeAvailable(gRPC)
+
+#add_subdirectory("${CMAKE_CURRENT_BINARY_DIR}/_deps/grpc-src/third_party/protobuf/cmake")
 
 # Build protos
 set(PROTOS ${CMAKE_CURRENT_SOURCE_DIR}/protos/test.proto)
