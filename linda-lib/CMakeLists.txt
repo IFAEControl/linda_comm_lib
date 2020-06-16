@@ -23,8 +23,8 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOS})
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
 target_link_libraries(${PROJECT_NAME} ${PROTOBUF_LIBRARIES} grpc++)
 
-add_executable(test_client "test_client.cpp")
-target_link_libraries(test_client linda-lib ${PROTOBUF_LIBRARIES} grpc++)
+#add_executable(test_client "test_client.cpp")
+#target_link_libraries(test_client linda-lib ${PROTOBUF_LIBRARIES} grpc++)
 
 #add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
