@@ -90,19 +90,18 @@ find_package(Protobuf REQUIRED
 # Fetch dependencies
 include(FetchContent)
 
-FetchContent_Declare(
-   gRPC
-   GIT_REPOSITORY https://github.com/grpc/grpc
-   GIT_TAG        v1.29.1
-)
-set(FETCHCONTENT_QUIET OFF)
-FetchContent_MakeAvailable(gRPC)
-
-#add_subdirectory("${CMAKE_CURRENT_BINARY_DIR}/_deps/grpc-src/third_party/protobuf/cmake")
-
-# Build protos
-set(PROTOS ${CMAKE_CURRENT_SOURCE_DIR}/protos/test.proto)
-#grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTOS})
+option(USE_SYSTEM_GRPC "Use system installed gRPC" OFF)
+if(USE_SYSTEM_GRPC)
+    find_package(gRPC CONFIG REQUIRED)
+else()
+    FetchContent_Declare(
+        gRPC
+        GIT_REPOSITORY https://github.com/grpc/grpc
+        GIT_TAG        v1.29.1
+    )
+    set(FETCHCONTENT_QUIET OFF)
+    FetchContent_MakeAvailable(gRPC)
+endif()
 
 ################################################################################
 # Sub-projects

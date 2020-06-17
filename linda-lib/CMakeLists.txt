@@ -12,21 +12,21 @@ set(ALL_FILES
     ${Archivos_de_origen}
 )
 
-# Protobuf
+################################################################################
+# Target
+################################################################################
+# Build protos
+set(PROTOS ${CMAKE_CURRENT_SOURCE_DIR}/../protos/test.proto)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOS})
 
-################################################################################
-# Target
-################################################################################
-add_library(${PROJECT_NAME} STATIC ${ALL_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
+add_library(${PROJECT_NAME} STATIC ${ALL_FILES} ${PROTO_SRCS})
 target_link_libraries(${PROJECT_NAME} ${PROTOBUF_LIBRARIES} grpc++)
 
-#add_executable(test_client "test_client.cpp")
-#target_link_libraries(test_client linda-lib ${PROTOBUF_LIBRARIES} grpc++)
+add_executable(test_client "test_client.cpp")
+target_link_libraries(test_client linda-lib ${PROTOBUF_LIBRARIES} grpc++)
 
-#add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE lindalib)
 
