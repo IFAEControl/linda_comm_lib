@@ -79,29 +79,28 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Find dependencies
-set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
-find_package(Protobuf REQUIRED
-	HINTS
-	"C:/Users/David/vcpkg/installed/x64-windows/share"
-	"C:/Users/David/vcpkg/installed/x64-windows/share/protobuf"
-	)
-
-# Fetch dependencies
-include(FetchContent)
-
-option(USE_SYSTEM_GRPC "Use system installed gRPC" OFF)
-if(USE_SYSTEM_GRPC)
-    find_package(gRPC CONFIG REQUIRED)
-else()
-    FetchContent_Declare(
-        gRPC
-        GIT_REPOSITORY https://github.com/grpc/grpc
-        GIT_TAG        v1.29.1
-    )
-    set(FETCHCONTENT_QUIET OFF)
-    FetchContent_MakeAvailable(gRPC)
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+    file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake"
+            "${CMAKE_BINARY_DIR}/conan.cmake")
 endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+conan_check(VERSION 1.24.1 REQUIRED)
+
+conan_add_remote(
+        NAME bincrafters
+        URL https://api.bintray.com/conan/bincrafters/public-conan
+)
+
+conan_cmake_run(
+        CONANFILE conanfile.txt
+        BASIC_SETUP
+        CMAKE_TARGETS
+        BUILD_TYPE "Release"
+        BUILD missing
+)
 
 ################################################################################
 # Sub-projects
