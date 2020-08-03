@@ -102,6 +102,9 @@ conan_cmake_run(
         BUILD missing
 )
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 ################################################################################
 # Sub-projects
 ################################################################################
