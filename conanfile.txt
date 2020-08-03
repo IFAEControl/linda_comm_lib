@@ -1,12 +1,8 @@
 [requires]
 Poco/1.9.3@pocoproject/stable
 
-[options]
-Poco:enable_xml=False
-Poco:enable_redis=False
-Poco:enable_apacheconnector=False
-Poco:enable_data=False
-Poco:enable_pdf=False
+#[options]
+#Poco:enable_xml=False
 
 [generators]
 cmake
