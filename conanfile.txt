@@ -7,7 +7,6 @@ Poco:enable_redis=False
 Poco:enable_apacheconnector=False
 Poco:enable_data=False
 Poco:enable_pdf=False
-Poco:shared=False
 
 [generators]
 cmake
