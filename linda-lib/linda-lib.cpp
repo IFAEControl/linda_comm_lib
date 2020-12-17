@@ -1,29 +1,132 @@
 #include <iostream>
+#include <array>
+#include <algorithm>
+#include <utility>
 
-#include <Poco/Net/SocketAddress.h>
-#include <Poco/Net/StreamSocket.h>
-#include <Poco/Net/SocketStream.h>
-#include <Poco/StreamCopier.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 #include "linda-lib.hpp"
+#include "commands.hpp"
+#include "sockets.hpp"
 
-using Poco::Net::IPAddress;
-
-// TODO: Ejemplo de una función de biblioteca
-void fnlindalib()
-{
-  //const HostEntry& entry = DNS::hostByName("www.appinf.com");
+template <typename T>
+std::pair<int, T> sendCmd(T& cmd) try {
+    spdlog::set_level(spdlog::level::debug);
+    
+    auto resp = send_command(cmd);
+    spdlog::debug(resp);
+    return {0, resp};
+} catch(std::exception& e) {
+    spdlog::critical(e.what());
+    return {-1, cmd};
+} catch(...) {
+    spdlog::critical("Unknown error");
+    return {-2, cmd};
 }
 
-int test() {
-  Poco::Net::SocketAddress sa("127.0.0.1", 8080);
-  Poco::Net::StreamSocket socket(sa);
-  Poco::Net::SocketStream str(socket);
-  str << "GET / HTTP/1.1\r\n"
-         "Host: www.appinf.com\r\n"
-         "\r\n";
+int ChipConfigRegisterWrite(const unsigned in[3], unsigned out[3]) {
+    uint96_t chip_config = in;
+    WriteChipConfig cmd(chip_config);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
 
-  str.flush();
-  Poco::StreamCopier::copyStream(str, std::cout);
-	return 0;
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
 }
+
+int PixelConfigRegisterWrite(const unsigned in[560], unsigned out[560]) {
+    uint17920_t pixel_config = in;
+    WritePixelConfig cmd(pixel_config);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
+}
+
+int PixelPulseRegisterWrite(const unsigned in[35], unsigned out[35]) {
+    uint1120_t pixel_pulse = in;
+    PixelPulseWrite cmd(pixel_pulse);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
+}
+
+
+int GeneratePulses() {
+    PulsesGenerate cmd;
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int ReadTemperature(unsigned* temp) {
+    if(!temp)
+        return -1;
+
+    Temperature cmd;
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    *temp = resp.second.getAnswer();
+    return resp.first;
+}
+
+void initCommunication(const char* str, unsigned sync_port, unsigned async_port) {
+    set_dest_ip(str);
+}
+
+int LnaHpfReset(unsigned wait_time_us) {
+    ResetLnaHpf cmd(wait_time_us);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int LnaNeuronDriving(unsigned wait_time_us, unsigned reset_time_us, bool disable_reset) {
+    NeuronDrivingLna cmd(wait_time_us, reset_time_us, disable_reset);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int LnaNoNeuronDriving(unsigned wait_time_us, unsigned reset_time_us, bool disable_reset) {
+    NoNeuronDrivingLna cmd(wait_time_us, reset_time_us, disable_reset);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int PllOutResetStatus(unsigned* status) {
+    if(!status)
+        return -1;
+    
+    StatusPllOutReset cmd;
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    *status = resp.second.getAnswer();
+    return resp.first;
+}
+
+int PllBitStreamGenerator(unsigned mode) {
+    ModePllBitstream cmd(mode);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int StartLnaThread(bool neuron_driving, unsigned period_ms, unsigned wait_time_us, unsigned reset_time_us,
+                    bool disable_reset) {
+    StartLna cmd(neuron_driving, period_ms, wait_time_us, reset_time_us, disable_reset);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int StopThread() {
+    StopLna cmd;
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+

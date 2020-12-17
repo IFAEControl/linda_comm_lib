@@ -1,5 +1,7 @@
 [requires]
 Poco/1.9.3@pocoproject/stable
+nlohmann_json/3.9.1
+spdlog/1.8.0 
 
 #[options]
 #Poco:enable_xml=False

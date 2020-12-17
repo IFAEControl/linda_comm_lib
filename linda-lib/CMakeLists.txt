@@ -3,9 +3,8 @@ set(PROJECT_NAME linda-lib)
 ################################################################################
 # Source groups
 ################################################################################
-set(Archivos_de_origen
-    "linda-lib.cpp"
-)
+file(GLOB Archivos_de_origen *.cpp)
+
 source_group("Archivos de origen" FILES ${Archivos_de_origen})
 
 set(ALL_FILES
@@ -15,11 +14,20 @@ set(ALL_FILES
 ################################################################################
 # Target
 ################################################################################
-add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
-target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+add_library(${PROJECT_NAME}-temp STATIC ${ALL_FILES})
+add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
 
-add_executable(test_client "test_client.cpp")
-target_link_libraries(test_client linda-lib)
+# Fix for windows
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-temp ${CONAN_LIBS})
+
+
+if(NOT MSVC)
+    add_executable(test_client "test_client.cpp")
+    target_link_libraries(test_client linda-lib)
+endif()
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE lindalib)
