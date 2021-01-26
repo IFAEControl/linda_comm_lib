@@ -11,3 +11,4 @@ template<typename T>
 T send_command(T& c);
 
 void set_dest_ip(const std::string& ip) noexcept;
+void set_ports(unsigned p, unsigned ap) noexcept;

@@ -12,10 +12,16 @@
 using Poco::Net::IPAddress;
 
 static std::string ip = "8.8.8.8";
-constexpr unsigned port = 32000;
+unsigned port = 32000;
+unsigned async_port;
 
 void set_dest_ip(const std::string& str) noexcept {
     ip = str;
+}
+
+void set_ports(unsigned p, unsigned ap) noexcept {
+    port = p;
+    async_port = ap;
 }
 
 
@@ -51,16 +57,3 @@ T send_command(T& c) {
 }
 
 template Temperature send_command<Temperature>(Temperature& c);
-template WriteChipConfig send_command<WriteChipConfig>(WriteChipConfig& c);
-template WritePixelConfig send_command<WritePixelConfig>(WritePixelConfig& c);
-template PixelPulseWrite send_command<PixelPulseWrite>(PixelPulseWrite& c);
-template PulsesGenerate send_command<PulsesGenerate>(PulsesGenerate& c);
-template GCATReset send_command<GCATReset>(GCATReset& c);
-template NeuronDrivingLna send_command<NeuronDrivingLna>(NeuronDrivingLna& c);
-template NoNeuronDrivingLna send_command<NoNeuronDrivingLna>(NoNeuronDrivingLna& c);
-template StatusPllOutReset send_command<StatusPllOutReset>(StatusPllOutReset& c);
-template ModePllBitstream send_command<ModePllBitstream>(ModePllBitstream& c);
-template ResetLnaHpf send_command<ResetLnaHpf>(ResetLnaHpf& c);
-template StartLna send_command<StartLna>(StartLna& c);
-template StopLna send_command<StopLna>(StopLna& c);
-

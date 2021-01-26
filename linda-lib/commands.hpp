@@ -53,72 +53,7 @@ protected:
 
 class Temperature : public Command {
 public:
-    Temperature();
+    Temperature(unsigned chips_bitmap);
     unsigned getAnswer();
-};
-
-class WriteChipConfig : public Command {
-public:
-    WriteChipConfig(uint96_t& cfg);
-    uint96_t getAnswer();
-};
-
-class WritePixelConfig : public Command {
-public:
-    WritePixelConfig(uint17920_t& cfg);
-    uint17920_t getAnswer();
-};
-
-class PixelPulseWrite : public Command {
-public:
-    PixelPulseWrite(uint1120_t& cfg);
-    uint1120_t getAnswer();
-};
-
-class GCATReset : public Command {
-public:
-    GCATReset();
-};
-
-class PulsesGenerate : public Command {
-public:
-    PulsesGenerate();
-};
-
-class ResetLnaHpf : public Command {
-public:
-    ResetLnaHpf(unsigned wait_time_us);
-};
-
-class NeuronDrivingLna : public Command {
-public:
-    NeuronDrivingLna(unsigned wait_time_us, unsigned reset_time_us, bool disable_reset);
-};
-
-class NoNeuronDrivingLna : public Command {
-public:
-    NoNeuronDrivingLna(unsigned wait_time_us, unsigned reset_time_us, bool disable_reset);
-};
-
-class StatusPllOutReset : public Command {
-public:
-    StatusPllOutReset();
-    unsigned getAnswer();
-};
-
-class ModePllBitstream : public Command {
-public:
-    ModePllBitstream(unsigned mode);
-};
-
-class StartLna : public Command {
- public:
-    StartLna(bool neuron_driving, unsigned period_ms, unsigned wait_time_us,
-            unsigned reset_time_us, bool disable_reset);
-};
-
-class StopLna : public Command {
- public:
-    StopLna();
 };
 

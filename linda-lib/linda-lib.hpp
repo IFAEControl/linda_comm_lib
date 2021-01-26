@@ -9,6 +9,7 @@
 // This functions are not yet implemented
 // their purpose is to serve as documentation
 
+extern "C" DllExport int InitCommunication(const char* str, int sync_port, int async_port);
 extern "C" DllExport int CameraReset();
 extern "C" DllExport int ChipRegisterWrite(const unsigned in[5], int chips_bitmap);
 extern "C" DllExport int ChipRegisterRead(unsigned out[5], int chips_bitmap);
@@ -27,6 +28,6 @@ extern "C" DllExport int FullArrayACQuisitionNonTDI(const unsigned params[5], un
 extern "C" DllExport int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap);
 extern "C" DllExport int SetHV(unsigned counts);
 extern "C" DllExport int SetTPDAC(unsigned counts);
-extern "C" DllExport int DISCcharacF(const char params[32], const char reg[20], const char px_reg[1480],
+extern "C" DllExport int DISCcharacF(const char params[32], const char reg[20], const char px_reg[480],
 										long size, char *counts, int idx);
 
