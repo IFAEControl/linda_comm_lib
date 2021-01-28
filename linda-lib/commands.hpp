@@ -29,10 +29,8 @@ public:
     std::array<unsigned,S> a;
 };
 
-using uint96_t = LongInt<3>;
-using uint17920_t = LongInt<560>;
-using uint1120_t = LongInt<35>;
-
+using uint156_t = LongInt<5>;
+using uint15360_t = LongInt<480>;
 
 struct Message {
     BaseHeaderType header{};
@@ -57,3 +55,40 @@ public:
     unsigned getAnswer();
 };
 
+class HVSet : public Command {
+public:
+    HVSet(unsigned counts);
+};
+
+class TPDACSet : public Command {
+public:
+    TPDACSet(unsigned counts);
+};
+
+class WriteChipRegister : public Command {
+public:
+    WriteChipRegister(uint156_t& val, unsigned chips_bitmap);
+};
+
+class ReadChipRegister : public Command {
+public:
+    ReadChipRegister(unsigned chips_bitmap);
+    uint156_t getAnswer();
+};
+
+class WritePixelRegister : public Command {
+public:
+    WritePixelRegister(uint15360_t& val, unsigned chips_bitmap);
+};
+
+class ReadPixelRegister : public Command {
+public:
+    ReadPixelRegister(unsigned chips_bitmap);
+    uint15360_t getAnswer();
+};
+
+class ChipIDRead : public Command {
+public:
+    ChipIDRead(unsigned chips_bitmap);
+    unsigned getAnswer();
+}:

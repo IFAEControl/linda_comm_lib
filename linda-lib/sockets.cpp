@@ -57,3 +57,10 @@ T send_command(T& c) {
 }
 
 template Temperature send_command<Temperature>(Temperature& c);
+template HVSet send_command<HVSet>(HVSet& c);
+template TPDACSet send_command<TPDACSet>(TPDACSet& c);
+template WriteChipRegister send_command<WriteChipRegister>(WriteChipRegister& c);
+template ReadChipRegister send_command<ReadChipRegister>(ReadChipRegister& c);
+template WritePixelRegister send_command<WritePixelRegister>(WritePixelRegister& c);
+template ReadPixelRegister send_command<ReadPixelRegister>(ReadPixelRegister& c);
+template ChipIDRead send_command<ChipIDRead>(ChipIDRead& c);

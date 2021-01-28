@@ -41,3 +41,61 @@ int ReadTemperature(unsigned* temp, unsigned chips_bitmap) {
     *temp = resp.second.getAnswer();
     return resp.first;
 }
+
+int SetHV(unsigned counts) {
+    HVSet cmd(counts);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int SetTPDAC(unsigned counts) {
+    TPDACSet cmd(counts);
+    auto resp = sendCmd(cmd);
+    return resp.first;
+}
+
+int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
+    uint156_t chips_reg = in;
+    WriteChipRegister cmd(chips_reg, chips_bitmap);
+    auto resp = sendCmd(cmd);
+    return resp.first;   
+}
+
+int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
+    ReadChipRegister cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
+}
+
+int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
+    uint15360_t pixel_reg = in;
+    WritePixelRegister cmd(chips_reg, chips_bitmap);
+    auto resp = sendCmd(cmd);
+    return resp.first;   
+}
+
+int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
+    ReadPixelRegister cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
+}
+
+int ReadChipID(unsigned *id, int chips_bitmap) {
+    if(!id)
+        return -1;
+
+    ChipIDRead cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    *id = resp.second.getAnswer();
+    return resp.first;
+}
