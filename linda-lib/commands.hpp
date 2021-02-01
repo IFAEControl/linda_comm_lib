@@ -91,4 +91,4 @@ class ChipIDRead : public Command {
 public:
     ChipIDRead(unsigned chips_bitmap);
     unsigned getAnswer();
-}:
+};

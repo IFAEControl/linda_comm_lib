@@ -43,9 +43,13 @@ int ReadTemperature(unsigned* temp, unsigned chips_bitmap) {
 }
 
 int SetHV(unsigned counts) {
+#ifdef DEBUG
+    return 0;
+#else
     HVSet cmd(counts);
     auto resp = sendCmd(cmd);
     return resp.first;
+#endif
 }
 
 int SetTPDAC(unsigned counts) {
@@ -73,7 +77,7 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
 
 int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
     uint15360_t pixel_reg = in;
-    WritePixelRegister cmd(chips_reg, chips_bitmap);
+    WritePixelRegister cmd(pixel_reg, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;   
 }
