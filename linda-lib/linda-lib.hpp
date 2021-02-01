@@ -14,7 +14,7 @@ extern "C" DllExport int FullArrayChipRegisterRead(unsigned out[150], int chips_
 extern "C" DllExport int PixelRegisterWrite(const unsigned in[480], int chips_bitmap);
 extern "C" DllExport int PixelRegisterRead(unsigned out[480], int chips_bitmap);
 extern "C" DllExport int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap);
-extern "C" DllExport int ReadChipID(unsigned *id, int chips_bitmap);
+extern "C" DllExport int ReadEricaID(unsigned *id, int chips_bitmap);
 extern "C" DllExport int FullARRAYReadEricaID(unsigned id[30], int chips_bitmap);
 extern "C" DllExport int ReadTemperature(unsigned *temp, int chips_bitmap);
 extern "C" DllExport int FullArrayReadTemperature(unsigned *temp[30], int chips_bitmap);
