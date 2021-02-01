@@ -34,12 +34,17 @@ int ReadTemperature(unsigned* temp, unsigned chips_bitmap) {
     if(!temp)
         return -1;
 
+#ifdef DEBUG
+    *temp = 765;
+    return 0;
+#else
     Temperature cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
     *temp = resp.second.getAnswer();
     return resp.first;
+#endif
 }
 
 int SetHV(unsigned counts) {
