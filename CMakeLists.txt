@@ -7,8 +7,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(linda-lib CXX)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
-
 ################################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
 ################################################################################
