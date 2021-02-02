@@ -52,17 +52,17 @@ std::pair<int, T> sendCmd(T& cmd) try {
     return {-2, cmd};
 }
 
-void InitCommunication(const char* str, unsigned sync_port, unsigned async_port) {
+int InitCommunication(const char* str, unsigned sync_port, unsigned async_port) {
 #ifdef DEBUG
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
-    return strcmp(ip, "172.16.17.189") == 0 && sync_port == 1234 && async_port == 4321 ? 0 : 1;
 #else
     set_dest_ip(str);
     set_ports(sync_port, async_port);
 #endif
+    return 0;
 }
 
 int CameraReset(){
