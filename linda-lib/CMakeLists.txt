@@ -1,5 +1,9 @@
 set(PROJECT_NAME linda-lib)
 
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DDEBUG")
+endif()
+
 ################################################################################
 # Source groups
 ################################################################################
@@ -23,9 +27,6 @@ generate_export_header(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-temp ${CONAN_LIBS})
 
-if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DDEBUG")
-endif()
 
 #if(NOT MSVC)
 #    add_executable(test_client "test_client.cpp")
