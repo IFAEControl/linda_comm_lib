@@ -1,8 +1,9 @@
 set(PROJECT_NAME linda-lib)
 
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DDEBUG")
+    add_definitions(-DDEBUG)
 endif()
+
 
 ################################################################################
 # Source groups
