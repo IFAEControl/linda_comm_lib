@@ -1,9 +1,5 @@
 set(PROJECT_NAME linda-lib)
 
-if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DDEBUG")
-endif()
-
 ################################################################################
 # Source groups
 ################################################################################
@@ -91,6 +87,7 @@ if(MSVC)
             /permissive-;
             /sdl;
             /W3;
+	    /DDEBUG;
             ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
@@ -106,6 +103,7 @@ if(MSVC)
             /permissive-;
             /sdl;
             /W3;
+	    /DDEBUG;
             ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
