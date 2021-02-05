@@ -10,7 +10,7 @@
 #include "commands.hpp"
 #include "sockets.hpp"
 
-#ifdef DEBUG
+#ifdef DUMMY
 #define X_SIZE 20
 #define Y_SIZE 8
 #define N_COUNTERS 8
@@ -52,8 +52,8 @@ std::pair<int, T> sendCmd(T& cmd) try {
     return {-2, cmd};
 }
 
-int InitCommunication(const char* str, unsigned sync_port, unsigned async_port) {
-#ifdef DEBUG
+int InitCommunication(const char* str, int sync_port, int async_port) {
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
@@ -66,7 +66,7 @@ int InitCommunication(const char* str, unsigned sync_port, unsigned async_port) 
 }
 
 int CameraReset(){
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
@@ -76,11 +76,11 @@ int CameraReset(){
 #endif
 }
 
-int ReadTemperature(unsigned* temp, unsigned chips_bitmap) {
+int ReadTemperature(unsigned* temp, int chips_bitmap) {
     if(!temp)
         return -1;
 
-#ifdef DEBUG
+#ifdef DUMMY
     *temp = 765;
     return 0;
 #else
@@ -94,7 +94,7 @@ int ReadTemperature(unsigned* temp, unsigned chips_bitmap) {
 }
 
 int SetHV(unsigned counts) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     HVSet cmd(counts);
@@ -104,7 +104,7 @@ int SetHV(unsigned counts) {
 }
 
 int SetTPDAC(unsigned counts) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
 
@@ -115,7 +115,7 @@ int SetTPDAC(unsigned counts) {
 }
 
 int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = in[i];
     return 0;
@@ -128,7 +128,7 @@ int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
 }
 
 int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         out[i] = chip_register[i];
     return 0;
@@ -144,15 +144,22 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
 #endif
 }
 
-int FullArrayChipRegisterRead(unsigned int out[150], unsigned int chips_bitmap){
-#ifdef DEBUG
+int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap) {
+#ifdef DUMMY
     return 0;
 #else
 #endif
 }
 
+int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap){
+#ifdef DUMMY
+    return 0;
+#else
+#endif
+    }
+
 int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<480; i++)
         pixel_register[i] = in[i];
     return 0;
@@ -166,7 +173,7 @@ int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
 }
 
 int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<480; i++)
         out[i] = pixel_register[i];
     return 0;
@@ -182,7 +189,7 @@ int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
 }
 
 int ReadEricaID(unsigned *id, int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     int enabled_chip = enabled_Chip_Founder(chips_bitmap);
     *id = chips_ids[enabled_chip];
     return 0;
@@ -199,18 +206,37 @@ int ReadEricaID(unsigned *id, int chips_bitmap) {
 #endif
 }
 
-int FullArrayReadTemperature(unsigned int temp[30], unsigned int chips_bitmap){
-    for(int i = 0; i < 30; i++)
-        temp[i]= 750 + i;
+int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
+#ifdef DUMMY
+    int enabled_chip = enabled_Chip_Founder(chips_bitmap);
+    *id = chips_ids[enabled_chip];
+    return 0;
+#else
+    if (!id)
+        return -1;
+
+    ChipIDRead cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if (resp.first < 0) return resp.first;
+
+    *id = resp.second.getAnswer();
+    return resp.first;
+#endif
+}
+
+int FullArrayReadTemperature(unsigned* temp[30], int chips_bitmap) {
+#ifdef DUMMY
+    return 0;
+#else
+#endif
+}
+
+int ACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap) {
     return 0;
 }
 
-int ACQuisitionTDI(const unsigned int params[5], unsigned int* data, unsigned int chips_bitmap){
-    return 0;
-}
-
-int ACQuisitionNonTDI(const unsigned int params[5], unsigned int* data, unsigned int chips_bitmap){
-#ifdef DEBUG
+int ACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
+#ifdef DUMMY
     for(int j=0; j<Y_SIZE; j++){
         for(int i=0; i<X_SIZE; i++){
             for(int k=0; k<N_COUNTERS; k++){
@@ -227,38 +253,38 @@ int ACQuisitionNonTDI(const unsigned int params[5], unsigned int* data, unsigned
 
 }
 
-int FullArrayACQuisitionTDI(const unsigned int params[5], unsigned int* data, unsigned int chips_bitmap){
-#ifdef DEBUG
+int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
+#ifdef DUMMY
     return 0;
 #else
 #endif
 }
 
-int FullArrayACQuisitionNonTDI(const unsigned int params[5], unsigned int* data, unsigned int chips_bitmap){
-#ifdef DEBUG
+int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
+#ifdef DUMMY
     return 0;
 #else
 #endif
 }
 
-int LoadFloodNormFactors(const unsigned int in[60], unsigned int chips_bitmap){
-#ifdef DEBUG
+int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
+#ifdef DUMMY
     return 0;
 #else
 #endif
 }
 
-int DiscCharacF(const unsigned int params[32], const unsigned int reg[20], const unsigned int px_reg[480],
-                long int size, unsigned int *counts, unsigned int chips_bitmap){
-#ifdef DEBUG
+int DISCcharacF(const char params[32], const char reg[20], const char px_reg[480],
+    long size, char* counts, int idx){
+#ifdef DUMMY
     return 0;
 #else
 #endif
 }
 
 int FullArrayDiscCharacF(const unsigned int params[32], const unsigned int reg[20], const unsigned int px_reg[14400],
-                         long int size, unsigned int *counts, unsigned int chips_bitmap){
-#ifdef DEBUG
+    long int size, unsigned int* counts, unsigned int chips_bitmap){
+#ifdef DUMMY
     return 0;
 #else
 #endif
