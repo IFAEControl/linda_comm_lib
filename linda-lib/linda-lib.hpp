@@ -6,7 +6,6 @@
 #define DllExport   /* Why windows is so weird and unpredictable */
 #endif
 
-#define DUMMY 
 
 extern "C" DllExport int InitCommunication(const char* str, int sync_port, int async_port);
 extern "C" DllExport int CameraReset();

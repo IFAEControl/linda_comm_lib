@@ -10,7 +10,7 @@
 #include "commands.hpp"
 #include "sockets.hpp"
 
-#ifdef DUMMY
+#ifdef DEBUG
 #define X_SIZE 20
 #define Y_SIZE 8
 #define N_COUNTERS 8
@@ -53,7 +53,7 @@ std::pair<int, T> sendCmd(T& cmd) try {
 }
 
 int InitCommunication(const char* str, int sync_port, int async_port) {
-#ifdef DUMMY
+#ifdef DEBUG
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
@@ -66,7 +66,7 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
 }
 
 int CameraReset(){
-#ifdef DUMMY
+#ifdef DEBUG
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
@@ -80,7 +80,7 @@ int ReadTemperature(unsigned* temp, int chips_bitmap) {
     if(!temp)
         return -1;
 
-#ifdef DUMMY
+#ifdef DEBUG
     *temp = 765;
     return 0;
 #else
@@ -94,7 +94,7 @@ int ReadTemperature(unsigned* temp, int chips_bitmap) {
 }
 
 int SetHV(unsigned counts) {
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
     HVSet cmd(counts);
@@ -104,7 +104,7 @@ int SetHV(unsigned counts) {
 }
 
 int SetTPDAC(unsigned counts) {
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 
@@ -115,7 +115,7 @@ int SetTPDAC(unsigned counts) {
 }
 
 int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     for (int i=0; i<5; i++)
         chip_register[i] = in[i];
     return 0;
@@ -128,7 +128,7 @@ int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
 }
 
 int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     for (int i=0; i<5; i++)
         out[i] = chip_register[i];
     return 0;
@@ -145,21 +145,21 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
 }
 
 int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
 }
 
 int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap){
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
     }
 
 int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     for (int i=0; i<480; i++)
         pixel_register[i] = in[i];
     return 0;
@@ -173,7 +173,7 @@ int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
 }
 
 int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     for (int i=0; i<480; i++)
         out[i] = pixel_register[i];
     return 0;
@@ -189,7 +189,7 @@ int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
 }
 
 int ReadEricaID(unsigned *id, int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     int enabled_chip = enabled_Chip_Founder(chips_bitmap);
     *id = chips_ids[enabled_chip];
     return 0;
@@ -207,7 +207,7 @@ int ReadEricaID(unsigned *id, int chips_bitmap) {
 }
 
 int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     int enabled_chip = enabled_Chip_Founder(chips_bitmap);
     *id = chips_ids[enabled_chip];
     return 0;
@@ -225,7 +225,7 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
 }
 
 int FullArrayReadTemperature(unsigned* temp[30], int chips_bitmap) {
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
@@ -236,7 +236,7 @@ int ACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap) {
 }
 
 int ACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DUMMY
+#ifdef DEBUG
     for(int j=0; j<Y_SIZE; j++){
         for(int i=0; i<X_SIZE; i++){
             for(int k=0; k<N_COUNTERS; k++){
@@ -254,21 +254,21 @@ int ACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap
 }
 
 int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
 }
 
 int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
 }
 
 int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
@@ -276,7 +276,7 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 
 int DISCcharacF(const char params[32], const char reg[20], const char px_reg[480],
     long size, char* counts, int idx){
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
@@ -284,7 +284,7 @@ int DISCcharacF(const char params[32], const char reg[20], const char px_reg[480
 
 int FullArrayDiscCharacF(const unsigned int params[32], const unsigned int reg[20], const unsigned int px_reg[14400],
     long int size, unsigned int* counts, unsigned int chips_bitmap){
-#ifdef DUMMY
+#ifdef DEBUG
     return 0;
 #else
 #endif
