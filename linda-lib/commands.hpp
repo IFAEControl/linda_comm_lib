@@ -76,6 +76,12 @@ public:
     uint156_t getAnswer();
 };
 
+class ReadFullArrayChipRegister : public Command {
+public:
+    ReadFullArrayChipRegister(unsigned chips_bitmap);
+    LongInt<150> getAnswer();
+};
+
 class WritePixelRegister : public Command {
 public:
     WritePixelRegister(uint15360_t& val, unsigned chips_bitmap);
@@ -87,8 +93,20 @@ public:
     uint15360_t getAnswer();
 };
 
+class ReadFullArrayPixelRegister : public Command {
+public:
+    ReadFullArrayPixelRegister(unsigned chips_bitmap);
+    LongInt<14400> getAnswer();
+};
+
 class ChipIDRead : public Command {
 public:
     ChipIDRead(unsigned chips_bitmap);
     unsigned getAnswer();
+};
+
+class FullChipIDRead : public Command {
+public:
+    FullChipIDRead(unsigned chips_bitmap);
+    LongInt<30> getAnswer();
 };

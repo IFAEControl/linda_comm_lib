@@ -133,7 +133,6 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
         out[i] = chip_register[i];
     return 0;
 #else
-
     ReadChipRegister cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
@@ -148,6 +147,13 @@ int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap) {
 #ifdef DEBUG
     return 0;
 #else
+    ReadFullArrayChipRegister cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
 #endif
 }
 
@@ -155,6 +161,13 @@ int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap){
 #ifdef DEBUG
     return 0;
 #else
+    ReadFullArrayPixelRegister cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), out);
+    return resp.first;
 #endif
     }
 
@@ -215,11 +228,12 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
     if (!id)
         return -1;
 
-    ChipIDRead cmd(chips_bitmap);
+    FullChipIDRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if (resp.first < 0) return resp.first;
 
-    *id = resp.second.getAnswer();
+    auto out_arr = resp.second.getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), id);
     return resp.first;
 #endif
 }
