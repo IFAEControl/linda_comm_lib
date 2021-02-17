@@ -31,7 +31,8 @@ deploy:
 - provider: GitHub
   auth_token:
     secure: PvMCuQd7iHDAzxJHSch9s45Pe7M/nJRuqvP5DXCo/mWuCc/HuHuZC2Fpngu3lJ4B
-  matrix:
-    artifact: linda_lib_release
-    artifact: linda_lib_debug
+  artifact:
+    matrix:
+      linda_lib_release
+      linda_lib_debug
   draft: false
