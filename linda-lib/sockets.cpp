@@ -64,3 +64,6 @@ template ReadChipRegister send_command<ReadChipRegister>(ReadChipRegister& c);
 template WritePixelRegister send_command<WritePixelRegister>(WritePixelRegister& c);
 template ReadPixelRegister send_command<ReadPixelRegister>(ReadPixelRegister& c);
 template ChipIDRead send_command<ChipIDRead>(ChipIDRead& c);
+template FullChipIDRead send_command<FullChipIDRead>(FullChipIDRead& c);
+template ReadFullArrayChipRegister send_command<ReadFullArrayChipRegister>(ReadFullArrayChipRegister& c);
+template ReadFullArrayPixelRegister send_command<ReadFullArrayPixelRegister>(ReadFullArrayPixelRegister& c);
