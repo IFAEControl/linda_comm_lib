@@ -14,7 +14,7 @@ init:
 
     conan user
 before_build:
-- cmd: cmake -DCMAKE_BUILD_TYPE=Release . -DDEBUG=On
+- cmd: cmake -DCMAKE_BUILD_TYPE=Release . -DDEBUG=Off
 build:
   project: linda-lib.sln
   parallel: true
