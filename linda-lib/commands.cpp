@@ -55,7 +55,7 @@ TPDACSet::TPDACSet(unsigned counts) : Command("set_tpdac") {
 WriteChipRegister::WriteChipRegister(uint156_t& val, unsigned chips_bitmap) : Command("chip_reg_write") {
     json args;
     args["chip_reg"] = val.val();
-    args["chips_bitmap"] = chips_bitmap;
+    m.body["chips_bitmap"] = chips_bitmap;
     m.body["arguments"] = args;
 }
 
