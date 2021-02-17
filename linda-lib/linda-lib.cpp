@@ -73,6 +73,7 @@ int CameraReset(){
         pixel_register[i] = 0;
     return 0;
 #else
+    return 0;
 #endif
 }
 
@@ -242,6 +243,7 @@ int FullArrayReadTemperature(unsigned* temp[30], int chips_bitmap) {
 #ifdef DEBUG
     return 0;
 #else
+    return 0;
 #endif
 }
 
@@ -269,6 +271,7 @@ int ACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap
     }
     return 0;
 #else
+    return 0;
 #endif
 
 }
@@ -277,6 +280,7 @@ int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_
 #ifdef DEBUG
     return 0;
 #else
+    return 0;
 #endif
 }
 
@@ -284,6 +288,7 @@ int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chi
 #ifdef DEBUG
     return 0;
 #else
+    return 0;
 #endif
 }
 
@@ -291,6 +296,7 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 #ifdef DEBUG
     return 0;
 #else
+    return 0;
 #endif
 }
 
@@ -299,6 +305,7 @@ int DiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigne
 #ifdef DEBUG
     return 0;
 #else
+    return 0;
 #endif
 }
 
@@ -307,5 +314,6 @@ int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], cons
 #ifdef DEBUG
     return 0;
 #else
+    return 0;
 #endif
 }
