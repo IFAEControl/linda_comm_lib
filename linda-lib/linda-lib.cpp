@@ -126,7 +126,7 @@ int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
     return resp.first;
 #endif
 }
-
+ 
 int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
 #ifdef DEBUG
     for (int i=0; i<5; i++)
@@ -221,7 +221,7 @@ int ReadEricaID(unsigned *id, int chips_bitmap) {
 
 int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
 #ifdef DEBUG
-    int enabled_chip = enabled_Chip_Founder(chips_bitmap);
+    int enabled_chip = enabled_Chip_Founder(chips_bitmap); 
     *id = chips_ids[enabled_chip];
     return 0;
 #else
@@ -251,14 +251,20 @@ int ACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap) {
 
 int ACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
 #ifdef DEBUG
-    for(int j=0; j<Y_SIZE; j++){
-        for(int i=0; i<X_SIZE; i++){
-            for(int k=0; k<N_COUNTERS; k++){
-                for(int a=0; a < N_ACQS; a++) {
-                    int value = (int) (((i + j * X_SIZE * 10.0 * (sin(i * j) + 1)) / 2670.0) * 255);
-                    data[i * N_COUNTERS + j * X_SIZE + k * N_ACQS + a] = value;
+    /*uint32_t counter = 0;
+    for(uint32_t j=0; j<Y_SIZE; j++){
+        for(uint32_t i=0; i<X_SIZE; i++){ 
+                for(uint32_t a=0; a < N_ACQS; a++) {
+                    uint32_t value = (int) (((i + unsigned int(j) * X_SIZE * 10.0 * (sin(i + j) + 1)) / 2670.0) * 255);
+                    // value = i * N_COUNTERS + j * X_SIZE + k * N_ACQS + a;
+                    data[a+i*N_ACQS+j*X_SIZE] = counter;
+                    counter++; 
                 }
-            }
+        }
+    }*/
+    for (uint32_t j = 0; j < N_ACQS; j++) {
+        for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
+            data[(j * X_SIZE * Y_SIZE) + i] = i;
         }
     }
     return 0;
@@ -288,16 +294,16 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 #endif
 }
 
-int DISCcharacF(const char params[32], const char reg[20], const char px_reg[480],
-    long size, char* counts, int idx){
+int DiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[480],
+    long int size, unsigned* counts, int chips_bitmap) {
 #ifdef DEBUG
     return 0;
 #else
 #endif
 }
 
-int FullArrayDiscCharacF(const unsigned int params[32], const unsigned int reg[20], const unsigned int px_reg[14400],
-    long int size, unsigned int* counts, unsigned int chips_bitmap){
+int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[14400],
+    long int size, unsigned* counts, int chips_bitmap){
 #ifdef DEBUG
     return 0;
 #else
