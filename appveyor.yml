@@ -14,25 +14,18 @@ init:
 
     conan user
 before_build:
-  matrix:
-    - cmd: cmake -DCMAKE_BUILD_TYPE=Release . -DDEBUG=On
-    - cmd: cmake -DCMAKE_BUILD_TYPE=Release . -DDEBUG=Off
+  - cmd: cmake -DCMAKE_BUILD_TYPE=Release . -DDEBUG=On
 build:
   project: linda-lib.sln
   parallel: true
   verbosity: minimal
 artifacts:
-  matrix:
-    - path: x64\Release\linda-lib.dll
-    - name: linda_lib_release
-    - path: x64\Debug\linda-lib.dll
-    - name: linda_lib_debug
+
+  - path: x64\Release\linda-lib.dll
+  name: linda_lib
 deploy:
 - provider: GitHub
   auth_token:
     secure: PvMCuQd7iHDAzxJHSch9s45Pe7M/nJRuqvP5DXCo/mWuCc/HuHuZC2Fpngu3lJ4B
-  artifact:
-    matrix:
-      linda_lib_release
-      linda_lib_debug
+  artifact: linda_lib
   draft: false
