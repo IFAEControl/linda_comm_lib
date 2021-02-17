@@ -3,7 +3,7 @@
 #ifdef _WIN32
 #define DllExport   __declspec( dllexport )
 #else
-#define DllExport   /* Why windows is so weird and unpredictable */
+#define DllExport   /* Cause Windows is so weird and unpredictable */
 #endif
 
 
