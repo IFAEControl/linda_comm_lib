@@ -22,7 +22,7 @@ build:
 artifacts:
 
   - path: x64\Release\linda-lib.dll
-  name: linda_lib
+  - name: linda_lib
 deploy:
 - provider: GitHub
   auth_token:
