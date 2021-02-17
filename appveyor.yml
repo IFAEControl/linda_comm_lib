@@ -24,9 +24,9 @@ build:
 artifacts:
   matrix:
     - path: x64\Release\linda-lib.dll
-    name: linda_lib_release
+    - name: linda_lib_release
     - path: x64\Debug\linda-lib.dll
-    name: linda_lib_debug
+    - name: linda_lib_debug
 deploy:
 - provider: GitHub
   auth_token:
