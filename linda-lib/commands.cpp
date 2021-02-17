@@ -93,7 +93,7 @@ ReadPixelRegister::ReadPixelRegister(unsigned chips_bitmap) : Command("pixel_reg
 }
 
 uint15360_t ReadPixelRegister::getAnswer() {
-    return m.body["answer"]["chip_reg"];
+    return m.body["answer"]["pixel_reg"];
 }
 
 ReadFullArrayPixelRegister::ReadFullArrayPixelRegister(unsigned chips_bitmap) : Command("full_pixel_reg_read") {
