@@ -82,7 +82,7 @@ LongInt<150> ReadFullArrayChipRegister::getAnswer() {
 WritePixelRegister::WritePixelRegister(uint15360_t& val, unsigned chips_bitmap) : Command("pixel_reg_write") {
     json args;
     args["pixel_reg"] = val.val();
-    args["chips_bitmap"] = std::array<unsigned, 1>{chips_bitmap};
+    m.body["chips_bitmap"] = chips_bitmap;
     m.body["arguments"] = args;
 }
 
