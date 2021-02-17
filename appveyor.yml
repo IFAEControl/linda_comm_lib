@@ -1,0 +1,30 @@
+version: 1.0.{build}-auto
+pull_requests:
+  do_not_increment_build_number: true
+configuration: Release
+init:
+- cmd: >-
+    set PATH=%PATH%;%PYTHON%/Scripts/
+
+    pip.exe install --upgrade pip --user
+
+    pip.exe install urllib3==1.25.11
+
+    pip.exe install conan
+
+    conan user
+before_build:
+- cmd: cmake -DCMAKE_BUILD_TYPE=Release . -DDEBUG=On
+build:
+  project: linda-lib.sln
+  parallel: true
+  verbosity: minimal
+artifacts:
+- path: x64\Release\linda-lib.dll
+  name: linda_lib
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: PvMCuQd7iHDAzxJHSch9s45Pe7M/nJRuqvP5DXCo/mWuCc/HuHuZC2Fpngu3lJ4B
+  artifact: linda_lib
+  draft: false
