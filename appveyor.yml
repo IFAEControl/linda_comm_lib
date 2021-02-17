@@ -20,7 +20,6 @@ build:
   parallel: true
   verbosity: minimal
 artifacts:
-
   - path: x64\Release\linda-lib.dll
   - name: linda_lib
 deploy:
