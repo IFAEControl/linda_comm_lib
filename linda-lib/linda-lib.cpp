@@ -239,7 +239,7 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
 #endif
 }
 
-int FullArrayReadTemperature(unsigned* temp[30], int chips_bitmap) {
+int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 #ifdef DEBUG
     return 0;
 #else
