@@ -103,7 +103,7 @@ ReadFullArrayPixelRegister::ReadFullArrayPixelRegister(unsigned chips_bitmap) : 
 }
 
 LongInt<14400> ReadFullArrayPixelRegister::getAnswer() {
-    return m.body["answer"]["chip_reg"];
+    return m.body["answer"]["pixel_reg"];
 }
 
 ChipIDRead::ChipIDRead(unsigned chips_bitmap) : Command("read_chip_id") {
