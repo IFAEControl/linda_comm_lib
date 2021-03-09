@@ -110,3 +110,9 @@ public:
     FullChipIDRead(unsigned chips_bitmap);
     LongInt<30> getAnswer();
 };
+
+class NonTdiAcq : public Command {
+public:
+    NonTdiAcq(const unsigned belt_dir, unsigned chips_bitmap);
+    LongInt<480> getAnswer();
+};
