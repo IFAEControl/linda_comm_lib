@@ -73,7 +73,9 @@ int CameraReset(){
         pixel_register[i] = 0;
     return 0;
 #else
-    return 0;
+    ResetCamera cmd;
+    auto resp = sendCmd(cmd);
+    return resp.first;
 #endif
 }
 

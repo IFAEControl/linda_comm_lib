@@ -137,3 +137,5 @@ LongInt<480> NonTdiAcq::getAnswer() {
     return m.body["answer"]["frame"];
 }
 
+ResetCamera::ResetCamera() : Command("camera_reset") {
+}

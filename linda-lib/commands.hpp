@@ -116,3 +116,8 @@ public:
     NonTdiAcq(const unsigned belt_dir, unsigned chips_bitmap);
     LongInt<480> getAnswer();
 };
+
+class ResetCamera : public Command {
+public:
+    ResetCamera();
+};
