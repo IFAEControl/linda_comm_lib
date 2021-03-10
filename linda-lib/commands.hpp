@@ -111,9 +111,9 @@ public:
     LongInt<30> getAnswer();
 };
 
-class NonTdiAcq : public Command {
+class NonContAcq : public Command {
 public:
-    NonTdiAcq(const unsigned belt_dir, unsigned chips_bitmap);
+    NonContAcq(const AcqInfo& info, unsigned frames, unsigned chips_bitmap);
     LongInt<480> getAnswer();
 };
 

@@ -126,14 +126,20 @@ LongInt<30> FullChipIDRead::getAnswer() {
     return m.body["answer"]["chip_id"];
 }
 
-NonTdiAcq::NonTdiAcq(const unsigned belt_dir, unsigned chips_bitmap) : Command("acq_non_tdi") {
+NonContAcq::NonContAcq(const AcqInfo& info, unsigned frames, unsigned chips_bitmap) : Command("acq") {
     json args;
-    args["belt_dir"] = belt_dir;
+    args["belt_dir"] = info.belt_dir;
     args["chips_bitmap"] = chips_bitmap;
+    args["frames"] = frames;
+    args["pulses"] = info.pulses;
+    args["pulses_width"] = info.pulses_width;
+    args["tdi"] = info.tdi;
+    args["test_pulses"] = info.test_pulses;
+    args["timer_reg"] = info.timer_reg;
     m.body["arguments"] = args;
 }
 
-LongInt<480> NonTdiAcq::getAnswer() {
+LongInt<480> NonContAcq::getAnswer() {
     return m.body["answer"]["frame"];
 }
 

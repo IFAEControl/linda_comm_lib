@@ -36,3 +36,12 @@ struct BaseHeaderType {
     uint32_t packetsize;
     uint8_t fill[24];
 };
+
+struct AcqInfo {
+    unsigned pulses_width;
+    unsigned pulses;
+    unsigned short timer_reg;
+    bool belt_dir;
+    bool test_pulses;
+    bool tdi;
+};

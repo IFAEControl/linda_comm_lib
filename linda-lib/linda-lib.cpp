@@ -252,8 +252,7 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 int ACQuisitionTDI(const unsigned belt_dir, unsigned* data, int chips_bitmap) {
     return 0;
 }
-
-int ACQuisitionNonTDI(const unsigned belt_dir, unsigned* data, int chips_bitmap){
+int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap) {
 #ifdef DEBUG
     /*uint32_t counter = 0;
     for(uint32_t j=0; j<Y_SIZE; j++){
@@ -276,7 +275,7 @@ int ACQuisitionNonTDI(const unsigned belt_dir, unsigned* data, int chips_bitmap)
     if (!data)
         return -1;
 
-    NonTdiAcq cmd(belt_dir, chips_bitmap);
+    NonContAcq cmd(info, frames, chips_bitmap);
     auto resp = sendCmd(cmd);
     if (resp.first < 0) return resp.first;
 
