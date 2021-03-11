@@ -2,6 +2,7 @@
 #include <sstream>
 #include <cstring>
 
+#include <Poco/Net/DatagramSocket.h>
 #include <Poco/Net/SocketAddress.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Net/SocketStream.h>
@@ -13,7 +14,7 @@ using Poco::Net::IPAddress;
 
 static std::string ip = "8.8.8.8";
 unsigned port = 32000;
-unsigned async_port;
+unsigned async_port = 32001;
 
 void set_dest_ip(const std::string& str) noexcept {
     ip = str;
@@ -22,6 +23,21 @@ void set_dest_ip(const std::string& str) noexcept {
 void set_ports(unsigned p, unsigned ap) noexcept {
     port = p;
     async_port = ap;
+}
+
+
+void read_bytes(unsigned bytes) {
+    Poco::Net::SocketAddress sa(ip, async_port);
+    Poco::Net::DatagramSocket dgs;
+    dgs.connect(sa);
+
+    char buffer[bytes+1];
+
+    for (;;) {
+        Poco::Net::SocketAddress sender;
+        int n = dgs.receiveBytes(buffer, sizeof(buffer)-1);
+        buffer[n] = '\0';
+    }
 }
 
 

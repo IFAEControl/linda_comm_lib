@@ -3,6 +3,8 @@
 #include "linda-lib.hpp"
 
 int main() {
+    int n;
+    std::cin >> n;
     InitCommunication("172.16.17.94", 32000, 32001);
     unsigned id[30];
     FullArrayReadEricaID(id, 5);
