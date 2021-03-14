@@ -5,6 +5,9 @@
 #include "commands.hpp"
 #include "header.hpp"
 
+std::unique_ptr<char> read_bytes(unsigned bytes);
+
+
 Message send_command(Message& c);
 
 template<typename T>

@@ -26,18 +26,19 @@ void set_ports(unsigned p, unsigned ap) noexcept {
 }
 
 
-void read_bytes(unsigned bytes) {
+std::unique_ptr<char> read_bytes(unsigned bytes) {
     Poco::Net::SocketAddress sa(ip, async_port);
     Poco::Net::DatagramSocket dgs;
     dgs.connect(sa);
 
-    char buffer[bytes+1];
+    auto buffer = std::make_unique<char>(bytes);
 
     for (;;) {
         Poco::Net::SocketAddress sender;
-        int n = dgs.receiveBytes(buffer, sizeof(buffer)-1);
-        buffer[n] = '\0';
+        int n = dgs.receiveBytes(buffer.get(), bytes);
     }
+
+    return std::move(buffer);
 }
 
 
