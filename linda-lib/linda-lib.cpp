@@ -59,6 +59,7 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
 #else
+    init_thread();
     set_dest_ip(str);
     set_ports(sync_port, async_port);
 #endif
@@ -249,9 +250,18 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 #endif
 }
 
-int ACQuisitionTDI(const unsigned belt_dir, unsigned* data, int chips_bitmap) {
-    return 0;
+int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap) {
+    ContAcq cmd(info, chips_bitmap);
+    auto resp = sendCmd(cmd);
+    return resp.first;
 }
+
+char* ACQuisitionStop() {
+    StopAcq cmd;
+    auto resp = sendCmd(cmd);
+    return buffer;
+}
+
 int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap) {
 #ifdef DEBUG
     /*uint32_t counter = 0;

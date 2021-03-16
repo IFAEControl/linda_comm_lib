@@ -5,6 +5,10 @@
 #include "commands.hpp"
 #include "header.hpp"
 
+extern char* buffer;
+
+void init_thread();
+
 std::unique_ptr<char> read_bytes(unsigned bytes);
 
 

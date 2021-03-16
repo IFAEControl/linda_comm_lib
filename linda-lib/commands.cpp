@@ -143,5 +143,22 @@ LongInt<480> NonContAcq::getAnswer() {
     return m.body["answer"]["frame"];
 }
 
+ContAcq::ContAcq(const AcqInfo& info, unsigned chips_bitmap) : Command("acq_cont") {
+    json args;
+    args["belt_dir"] = info.belt_dir;
+    args["chips_bitmap"] = chips_bitmap;
+    args["pulses"] = info.pulses;
+    args["pulses_width"] = info.pulses_width;
+    args["tdi"] = info.tdi;
+    args["test_pulses"] = info.test_pulses;
+    args["timer_reg"] = info.timer_reg;
+    m.body["arguments"] = args;
+}
+
+
+StopAcq::StopAcq() : Command("acq_cont") {
+
+}
+
 ResetCamera::ResetCamera() : Command("camera_reset") {
 }

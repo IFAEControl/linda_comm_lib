@@ -117,6 +117,16 @@ public:
     LongInt<480> getAnswer();
 };
 
+class ContAcq : public Command {
+public:
+    ContAcq(const AcqInfo& info, unsigned chips_bitmap);
+};
+
+class StopAcq : public Command {
+public:
+    StopAcq();
+};
+
 class ResetCamera : public Command {
 public:
     ResetCamera();

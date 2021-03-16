@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <sstream>
 #include <cstring>
 
@@ -15,6 +16,33 @@ using Poco::Net::IPAddress;
 static std::string ip = "8.8.8.8";
 unsigned port = 32000;
 unsigned async_port = 32001;
+
+char* buffer = nullptr;
+
+std::thread reader{};
+
+void reader_thread();
+
+void init_thread() {
+    reader = std::thread(reader_thread);
+}
+
+void reader_thread() {
+    Poco::Net::SocketAddress sa(ip, async_port);
+    Poco::Net::DatagramSocket dgs;
+    dgs.connect(sa);
+
+    for (;;) {
+        // first read how many bytes to read
+        unsigned bytes;
+        dgs.receiveBytes(&bytes, sizeof(bytes));
+
+        if(buffer == nullptr)
+            buffer = new char[bytes];
+
+        int n = dgs.receiveBytes(buffer, bytes);
+    } 
+}
 
 void set_dest_ip(const std::string& str) noexcept {
     ip = str;
@@ -85,4 +113,6 @@ template FullChipIDRead send_command<FullChipIDRead>(FullChipIDRead& c);
 template ReadFullArrayChipRegister send_command<ReadFullArrayChipRegister>(ReadFullArrayChipRegister& c);
 template ReadFullArrayPixelRegister send_command<ReadFullArrayPixelRegister>(ReadFullArrayPixelRegister& c);
 template NonContAcq send_command<NonContAcq>(NonContAcq& c);
+template ContAcq send_command<ContAcq>(ContAcq& c);
+template StopAcq send_command<StopAcq>(StopAcq& c);
 template ResetCamera send_command<ResetCamera>(ResetCamera& c);

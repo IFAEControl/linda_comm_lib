@@ -22,6 +22,7 @@ extern "C" DllExport int ReadTemperature(unsigned *temp, int chips_bitmap);
 extern "C" DllExport int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap);
 extern "C" DllExport int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap);
 extern "C" DllExport int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap);
+extern "C" DllExport char* ACQuisitionStop();
 extern "C" DllExport int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
 extern "C" DllExport int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
 extern "C" DllExport int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap);
