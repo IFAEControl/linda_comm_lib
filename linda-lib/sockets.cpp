@@ -17,7 +17,8 @@ static std::string ip = "8.8.8.8";
 unsigned port = 32000;
 unsigned async_port = 32001;
 
-char* buffer = nullptr;
+char* buffer[500]{};
+unsigned counter = 0;
 
 std::thread reader{};
 
@@ -37,10 +38,12 @@ void reader_thread() {
         unsigned bytes;
         dgs.receiveBytes(&bytes, sizeof(bytes));
 
-        if(buffer == nullptr)
-            buffer = new char[bytes];
+        if(buffer[counter] == nullptr)
+            buffer[counter] = new char[bytes];
 
-        int n = dgs.receiveBytes(buffer, bytes);
+        int n = dgs.receiveBytes(buffer[counter], bytes);
+
+        counter++;
     } 
 }
 

@@ -250,16 +250,25 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 #endif
 }
 
+int getPages() {
+    return counter;
+}
+
+char* getPagePointer(unsigned page) {
+    return buffer[page];
+}
+
 int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap) {
+    counter = 0;
     ContAcq cmd(info, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
 }
 
-char* ACQuisitionStop() {
+int ACQuisitionStop() {
     StopAcq cmd;
     auto resp = sendCmd(cmd);
-    return buffer;
+    return resp.first;
 }
 
 int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap) {

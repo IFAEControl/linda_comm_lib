@@ -45,3 +45,4 @@ struct AcqInfo {
     bool test_pulses;
     bool tdi;
 };
+

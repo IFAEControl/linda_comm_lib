@@ -5,7 +5,8 @@
 #include "commands.hpp"
 #include "header.hpp"
 
-extern char* buffer;
+extern char* buffer[500];
+extern unsigned counter;
 
 void init_thread();
 
