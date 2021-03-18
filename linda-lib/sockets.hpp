@@ -1,12 +1,17 @@
 #pragma once
 
+#include <condition_variable>
+
 #include <nlohmann/json.hpp>
 
 #include "commands.hpp"
 #include "header.hpp"
 
-extern char* buffer[500];
-extern unsigned counter;
+extern char* buffer;
+extern unsigned bytes;
+extern std::condition_variable cv;
+extern std::mutex cv_m;
+extern std::unique_lock<std::mutex> lk;
 
 void init_thread();
 

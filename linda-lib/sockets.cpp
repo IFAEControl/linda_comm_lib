@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <mutex>
 #include <sstream>
 #include <cstring>
 
@@ -17,10 +18,13 @@ static std::string ip = "8.8.8.8";
 unsigned port = 32000;
 unsigned async_port = 32001;
 
-char* buffer[500]{};
-unsigned counter = 0;
-
+char* buffer = nullptr;
+unsigned bytes = 0;
 std::thread reader{};
+
+std::condition_variable cv{};
+std::mutex cv_m;
+std::unique_lock<std::mutex> lk{cv_m};
 
 void reader_thread();
 
@@ -35,15 +39,14 @@ void reader_thread() {
 
     for (;;) {
         // first read how many bytes to read
-        unsigned bytes;
         dgs.receiveBytes(&bytes, sizeof(bytes));
 
-        if(buffer[counter] == nullptr)
-            buffer[counter] = new char[bytes];
+        cv_m.lock();
+        if(buffer == nullptr)
+            buffer = new char[bytes];
 
-        int n = dgs.receiveBytes(buffer[counter], bytes);
-
-        counter++;
+        int n = dgs.receiveBytes(buffer, bytes);
+        cv_m.unlock();
     } 
 }
 

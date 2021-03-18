@@ -250,16 +250,13 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 #endif
 }
 
-int getPages() {
-    return counter;
-}
-
-char* getPagePointer(unsigned page) {
-    return buffer[page];
+void PopFrame(unsigned* data) {
+    cv_m.lock();
+    std::memcpy(data, buffer, bytes);
+    cv_m.unlock();
 }
 
 int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap) {
-    counter = 0;
     ContAcq cmd(info, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
