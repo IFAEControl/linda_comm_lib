@@ -156,7 +156,7 @@ ContAcq::ContAcq(const AcqInfo& info, unsigned chips_bitmap) : Command("acq_cont
 }
 
 
-StopAcq::StopAcq() : Command("acq_cont") {
+StopAcq::StopAcq() : Command("acq_stop") {
 
 }
 
