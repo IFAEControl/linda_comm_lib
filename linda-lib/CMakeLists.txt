@@ -8,6 +8,7 @@ set(PROJECT_NAME linda-lib)
 # Source groups
 ################################################################################
 file(GLOB Archivos_de_origen *.cpp)
+list(FILTER Archivos_de_origen EXCLUDE REGEX ".*_client.cpp")
 
 source_group("Archivos de origen" FILES ${Archivos_de_origen})
 

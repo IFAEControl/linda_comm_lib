@@ -34,8 +34,7 @@ void init_thread() {
 
 void reader_thread() {
     Poco::Net::SocketAddress sa(ip, async_port);
-    Poco::Net::DatagramSocket dgs;
-    dgs.connect(sa);
+    Poco::Net::StreamSocket dgs(sa);
 
     for (;;) {
         // first read how many bytes to read
@@ -62,8 +61,7 @@ void set_ports(unsigned p, unsigned ap) noexcept {
 
 std::unique_ptr<char> read_bytes(unsigned bytes) {
     Poco::Net::SocketAddress sa(ip, async_port);
-    Poco::Net::DatagramSocket dgs;
-    dgs.connect(sa);
+    Poco::Net::StreamSocket dgs(sa);
 
     auto buffer = std::make_unique<char>(bytes);
 
