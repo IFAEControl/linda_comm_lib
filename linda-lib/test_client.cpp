@@ -23,6 +23,15 @@ int main() {
     );
 
     rootMenu -> Insert(
+            "start_2", [&](std::ostream& out, int chip) { 
+                AcqInfo info{10,10,10,true,true,false};
+                ACQuisition(info, 1, data, 1<<chip);
+                out << "done\n"; 
+        },
+            "Start non continuous acquisition" 
+    );
+
+    rootMenu -> Insert(
             "pop_frame", [&](std::ostream& out) {
                 PopFrame(data);
                 out << "done\n"; 
