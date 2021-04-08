@@ -40,12 +40,12 @@ void reader_thread() {
         // first read how many bytes to read
         dgs.receiveBytes(&bytes, sizeof(bytes));
 
-        cv_m.lock();
+        //cv_m.lock();
         if(buffer == nullptr)
             buffer = new char[bytes];
 
         int n = dgs.receiveBytes(buffer, bytes);
-        cv_m.unlock();
+        //cv_m.unlock();
     } 
 }
 

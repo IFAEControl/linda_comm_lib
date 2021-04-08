@@ -251,9 +251,9 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 }
 
 void PopFrame(unsigned* data) {
-    cv_m.lock();
+    //cv_m.lock();
     std::memcpy(data, buffer, bytes);
-    cv_m.unlock();
+    //cv_m.unlock();
 }
 
 int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap) {
