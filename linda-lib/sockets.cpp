@@ -34,19 +34,18 @@ void init_thread() {
 
 void reader_thread() {
     Poco::Net::SocketAddress sa(ip, async_port);
-    Poco::Net::DatagramSocket dgs;
-    dgs.connect(sa);
+    Poco::Net::StreamSocket dgs(sa);
 
     for (;;) {
         // first read how many bytes to read
         dgs.receiveBytes(&bytes, sizeof(bytes));
 
-        cv_m.lock();
+        //cv_m.lock();
         if(buffer == nullptr)
             buffer = new char[bytes];
 
         int n = dgs.receiveBytes(buffer, bytes);
-        cv_m.unlock();
+        //cv_m.unlock();
     } 
 }
 
@@ -62,8 +61,7 @@ void set_ports(unsigned p, unsigned ap) noexcept {
 
 std::unique_ptr<char> read_bytes(unsigned bytes) {
     Poco::Net::SocketAddress sa(ip, async_port);
-    Poco::Net::DatagramSocket dgs;
-    dgs.connect(sa);
+    Poco::Net::StreamSocket dgs(sa);
 
     auto buffer = std::make_unique<char>(bytes);
 

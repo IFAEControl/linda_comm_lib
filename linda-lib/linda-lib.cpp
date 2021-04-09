@@ -260,9 +260,9 @@ void PopFrame(unsigned* data) {
         }
     }
 #else
-    cv_m.lock();
+    //cv_m.lock();
     std::memcpy(data, buffer, bytes);
-    cv_m.unlock();
+    //cv_m.unlock();
 #endif
 }
 
@@ -293,8 +293,7 @@ int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap)
     //auto out_arr = resp.second.getAnswer();
     //std::copy(out_arr.begin(), out_arr.end(), data);
     auto size = 480*frames;
-    auto d = read_bytes(size);
-    std::memcpy(data, d.get(), size);
+    std::memcpy(data, buffer, size);
 
     return resp.first;
 #endif
