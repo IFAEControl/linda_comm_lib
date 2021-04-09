@@ -35,7 +35,9 @@ void reader_thread() {
     for (;;) {
         unsigned bytes = 0;    
         // first read how many bytes to read
-        dgs.receiveBytes(&bytes, sizeof(bytes));
+        dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
+
+        //std::cout << "Reading " << bytes << std::endl;
 
         auto buffer = fb.addFrame(bytes);
         int n = dgs.receiveBytes(buffer, bytes, MSG_WAITALL);

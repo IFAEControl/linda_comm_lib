@@ -13,6 +13,9 @@ char* FrameBuffer::addFrame(unsigned size) {
 }
 
 void FrameBuffer::moveLastFrame(unsigned* data) {
+	//std::cout << "Write " << _curr_write_frame << std::endl;
+	//std::cout << "Read " << _curr_read_frame << std::endl;
+
 	// wait for a frame	
 	while(_buf[_curr_read_frame].mem == nullptr);
 
