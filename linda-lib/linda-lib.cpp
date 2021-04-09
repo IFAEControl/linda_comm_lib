@@ -298,8 +298,7 @@ int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap)
     //auto out_arr = resp.second.getAnswer();
     //std::copy(out_arr.begin(), out_arr.end(), data);
     auto size = 480*frames;
-    auto d = read_bytes(size);
-    std::memcpy(data, d.get(), size);
+    std::memcpy(data, buffer, size);
 
     return resp.first;
 #endif
