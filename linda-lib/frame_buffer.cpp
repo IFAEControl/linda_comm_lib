@@ -6,8 +6,16 @@
 // XXX: make it thread-safe and avoid burning cycles
 
 char* FrameBuffer::addFrame(unsigned size) {
+	if(_curr_write_frame == _curr_read_frame) {
+		// we could reuse the same memory allocation to safe time
+		auto frame = _buf[_curr_read_frame];
+		delete[] frame.mem;
+		_curr_read_frame = ++_curr_read_frame % CACHE_SIZE;
+	}
+
 	auto addr = new char[size];
 	_buf[_curr_write_frame] = Frame{addr, size};
+
 	_curr_write_frame = ++_curr_write_frame % CACHE_SIZE;
 	return addr;
 }
