@@ -23,9 +23,9 @@ int main() {
     );
 
     rootMenu -> Insert(
-            "start_2", [&](std::ostream& out, int chip) { 
+            "start_2", [&](std::ostream& out, int chip, int frames) { 
                 AcqInfo info{10,10,10,true,true,false};
-                ACQuisition(info, 1, data, 1<<chip);
+                ACQuisition(info, frames, data, 1<<chip);
                 out << "done\n"; 
         },
             "Start non continuous acquisition" 
@@ -34,7 +34,9 @@ int main() {
     rootMenu -> Insert(
             "pop_frame", [&](std::ostream& out) {
                 PopFrame(data);
-                out << "done\n"; 
+                for(int i = 0; i < 10; i++)
+                    out << data[i];
+                out << "\ndone\n"; 
         },
             "Pop frame" 
     );

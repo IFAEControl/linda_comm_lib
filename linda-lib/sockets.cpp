@@ -1,6 +1,5 @@
 #include <iostream>
 #include <thread>
-#include <mutex>
 #include <sstream>
 #include <cstring>
 
@@ -18,13 +17,9 @@ static std::string ip = "8.8.8.8";
 unsigned port = 32000;
 unsigned async_port = 32001;
 
-char* buffer = nullptr;
-unsigned bytes = 0;
-std::thread reader{};
+FrameBuffer fb;
 
-std::condition_variable cv{};
-std::mutex cv_m;
-std::unique_lock<std::mutex> lk{cv_m};
+std::thread reader{};
 
 void reader_thread();
 
@@ -35,17 +30,15 @@ void init_thread() {
 void reader_thread() {
     Poco::Net::SocketAddress sa(ip, async_port);
     Poco::Net::StreamSocket dgs(sa);
+    dgs.setBlocking(true);
 
     for (;;) {
+        unsigned bytes = 0;    
         // first read how many bytes to read
         dgs.receiveBytes(&bytes, sizeof(bytes));
 
-        //cv_m.lock();
-        if(buffer == nullptr)
-            buffer = new char[bytes];
-
-        int n = dgs.receiveBytes(buffer, bytes);
-        //cv_m.unlock();
+        auto buffer = fb.addFrame(bytes);
+        int n = dgs.receiveBytes(buffer, bytes, MSG_WAITALL);
     } 
 }
 
@@ -57,22 +50,6 @@ void set_ports(unsigned p, unsigned ap) noexcept {
     port = p;
     async_port = ap;
 }
-
-
-std::unique_ptr<char> read_bytes(unsigned bytes) {
-    Poco::Net::SocketAddress sa(ip, async_port);
-    Poco::Net::StreamSocket dgs(sa);
-
-    auto buffer = std::make_unique<char>(bytes);
-
-    for (;;) {
-        Poco::Net::SocketAddress sender;
-        int n = dgs.receiveBytes(buffer.get(), bytes);
-    }
-
-    return std::move(buffer);
-}
-
 
 Message send_command(Message& c) {
     Poco::Net::SocketAddress sa(ip, port);

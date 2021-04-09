@@ -260,9 +260,7 @@ void PopFrame(unsigned* data) {
         }
     }
 #else
-    //cv_m.lock();
-    std::memcpy(data, buffer, bytes);
-    //cv_m.unlock();
+    fb.moveLastFrame(data);
 #endif
 }
 
@@ -288,13 +286,6 @@ int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap)
 
     NonContAcq cmd(info, frames, chips_bitmap);
     auto resp = sendCmd(cmd);
-    if (resp.first < 0) return resp.first;
-
-    //auto out_arr = resp.second.getAnswer();
-    //std::copy(out_arr.begin(), out_arr.end(), data);
-    auto size = 480*frames;
-    std::memcpy(data, buffer, size);
-
     return resp.first;
 #endif
 }
