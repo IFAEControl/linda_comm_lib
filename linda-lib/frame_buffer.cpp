@@ -7,7 +7,7 @@
 
 char* FrameBuffer::addFrame(unsigned size) {
 	if(_curr_write_frame == _curr_read_frame) {
-		// we could reuse the same memory allocation to safe time
+		// we could reuse the same memory allocation to save time
 		auto frame = _buf[_curr_read_frame];
 		delete[] frame.mem;
 		_curr_read_frame = ++_curr_read_frame % CACHE_SIZE;
