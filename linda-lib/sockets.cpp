@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <sstream>
+#include <memory>
 #include <cstring>
 
 #include <Poco/Net/DatagramSocket.h>
@@ -41,11 +42,9 @@ void reader_thread() {
         // first read how many bytes to read
         dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
 
-        //std::cout << "Reading " << bytes << std::endl;
-        _mutex.lock();
-        auto buffer = fb.addFrame(bytes);
-        int n = dgs.receiveBytes(buffer, bytes, MSG_WAITALL);
-        _mutex.unlock();
+        Frame f(bytes);
+        int n = dgs.receiveBytes(f.get(), bytes, MSG_WAITALL);
+        fb.addFrame(std::move(f));
     } 
 }
 
