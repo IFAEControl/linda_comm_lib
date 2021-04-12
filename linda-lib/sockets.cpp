@@ -1,6 +1,5 @@
 #include <iostream>
 #include <thread>
-#include <mutex>
 #include <sstream>
 #include <cstring>
 
@@ -18,15 +17,10 @@ static std::string ip = "8.8.8.8";
 unsigned port = 32000;
 unsigned async_port = 32001;
 
-char* buffer = nullptr;
-unsigned bytes = 0;
+FrameBuffer fb;
 
 static bool thread_running = false;
 std::thread reader{};
-
-std::condition_variable cv{};
-std::mutex cv_m;
-std::unique_lock<std::mutex> lk{cv_m};
 
 void reader_thread();
 
@@ -40,17 +34,17 @@ void init_thread() {
 void reader_thread() {
     Poco::Net::SocketAddress sa(ip, async_port);
     Poco::Net::StreamSocket dgs(sa);
+    dgs.setBlocking(true);
 
     for (;;) {
+        unsigned bytes = 0;    
         // first read how many bytes to read
-        dgs.receiveBytes(&bytes, sizeof(bytes));
+        dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
 
-        //cv_m.lock();
-        if(buffer == nullptr)
-            buffer = new char[bytes];
+        //std::cout << "Reading " << bytes << std::endl;
 
-        int n = dgs.receiveBytes(buffer, bytes);
-        //cv_m.unlock();
+        auto buffer = fb.addFrame(bytes);
+        int n = dgs.receiveBytes(buffer, bytes, MSG_WAITALL);
     } 
 }
 
@@ -62,7 +56,6 @@ void set_ports(unsigned p, unsigned ap) noexcept {
     port = p;
     async_port = ap;
 }
-
 
 Message send_command(Message& c) {
     Poco::Net::SocketAddress sa(ip, port);

@@ -11,11 +11,12 @@
 #include "sockets.hpp"
 
 #ifdef DEBUG
-#define X_SIZE 20
-#define Y_SIZE 8
-#define N_COUNTERS 8
-#define N_ACQS 8
+    #define X_SIZE 20
+    #define Y_SIZE 8
+    #define N_COUNTERS 6
 
+
+    unsigned int n_frames = 0;
     unsigned int pixel_register[480];
     unsigned int chip_register[5];
     unsigned int chips_ids[30] = {0xA1,0xA2,0xA3,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF,
@@ -251,9 +252,16 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 }
 
 void PopFrame(unsigned* data) {
-    //cv_m.lock();
-    std::memcpy(data, buffer, bytes);
-    //cv_m.unlock();
+#ifdef DEBUG
+    // data = (unsigned*) malloc((n_frames * X_SIZE * Y_SIZE * N_COUNTERS) * sizeof(unsigned)); 
+    for (uint32_t j = 0; j < n_frames*N_COUNTERS; j++) {
+        for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
+            data[(j * X_SIZE * Y_SIZE) + i] = i + (j*(X_SIZE * Y_SIZE));
+        }
+    }
+#else
+    fb.moveLastFrame(data);
+#endif
 }
 
 int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap) {
@@ -270,22 +278,7 @@ int ACQuisitionStop() {
 
 int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap) {
 #ifdef DEBUG
-    /*uint32_t counter = 0;
-    for(uint32_t j=0; j<Y_SIZE; j++){
-        for(uint32_t i=0; i<X_SIZE; i++){ 
-                for(uint32_t a=0; a < N_ACQS; a++) {
-                    uint32_t value = (int) (((i + unsigned int(j) * X_SIZE * 10.0 * (sin(i + j) + 1)) / 2670.0) * 255);
-                    // value = i * N_COUNTERS + j * X_SIZE + k * N_ACQS + a;
-                    data[a+i*N_ACQS+j*X_SIZE] = counter;
-                    counter++; 
-                }
-        }
-    }*/
-    for (uint32_t j = 0; j < N_ACQS; j++) {
-        for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
-            data[(j * X_SIZE * Y_SIZE) + i] = i;
-        }
-    }
+    n_frames = frames;
     return 0;
 #else
     if (!data)
@@ -293,13 +286,6 @@ int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap)
 
     NonContAcq cmd(info, frames, chips_bitmap);
     auto resp = sendCmd(cmd);
-    if (resp.first < 0) return resp.first;
-
-    //auto out_arr = resp.second.getAnswer();
-    //std::copy(out_arr.begin(), out_arr.end(), data);
-    auto size = 480*frames;
-    std::memcpy(data, buffer, size);
-
     return resp.first;
 #endif
 }

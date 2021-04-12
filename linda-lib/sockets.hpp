@@ -6,17 +6,11 @@
 
 #include "commands.hpp"
 #include "header.hpp"
+#include "frame_buffer.hpp"
 
-extern char* buffer;
-extern unsigned bytes;
-extern std::condition_variable cv;
-extern std::mutex cv_m;
-extern std::unique_lock<std::mutex> lk;
+extern FrameBuffer fb;
 
 void init_thread();
-
-std::unique_ptr<char> read_bytes(unsigned bytes);
-
 
 Message send_command(Message& c);
 

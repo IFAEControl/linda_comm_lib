@@ -1,8 +1,8 @@
 set(PROJECT_NAME linda-lib)
 
-#if(MSVC)
-#    add_definitions(-DDEBUG)
-#endif()
+if(MSVC)
+    add_definitions(-DDEBUG)
+endif()
 
 ################################################################################
 # Source groups
