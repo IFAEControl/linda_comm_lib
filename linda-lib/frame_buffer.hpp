@@ -18,4 +18,6 @@ private:
 	Frame _buf[CACHE_SIZE]{};
 	std::atomic_size_t _curr_write_frame{0};
 	std::atomic_size_t _curr_read_frame{0};
+
+	std::mutex _mutex;
 };
