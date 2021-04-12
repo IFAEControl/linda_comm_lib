@@ -10,6 +10,12 @@ using namespace cli;
 int main() {
     unsigned data[14400];
     InitCommunication("172.16.17.94", 32000, 32001);
+        /*AcqInfo info{10,10,10,true,true,false};
+                ACQuisitionCont(info, data, 1<<0);
+                PopFrame(data);
+                for(int i = 0; i < 10; i++)
+                    std::cout << data[i];
+                std::cout << "\ndone\n";*/ 
 
     auto rootMenu = std::make_unique<Menu>("linda");
 

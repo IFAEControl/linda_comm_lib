@@ -42,9 +42,10 @@ void reader_thread() {
         dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
 
         //std::cout << "Reading " << bytes << std::endl;
-
+        _mutex.lock();
         auto buffer = fb.addFrame(bytes);
         int n = dgs.receiveBytes(buffer, bytes, MSG_WAITALL);
+        _mutex.unlock();
     } 
 }
 
