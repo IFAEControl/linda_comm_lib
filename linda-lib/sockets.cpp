@@ -20,6 +20,8 @@ unsigned async_port = 32001;
 
 char* buffer = nullptr;
 unsigned bytes = 0;
+
+static bool thread_running = false;
 std::thread reader{};
 
 std::condition_variable cv{};
@@ -29,7 +31,10 @@ std::unique_lock<std::mutex> lk{cv_m};
 void reader_thread();
 
 void init_thread() {
-    reader = std::thread(reader_thread);
+    if(!thread_running) {
+        thread_running = true;
+        reader = std::thread(reader_thread);
+    }
 }
 
 void reader_thread() {
@@ -56,21 +61,6 @@ void set_dest_ip(const std::string& str) noexcept {
 void set_ports(unsigned p, unsigned ap) noexcept {
     port = p;
     async_port = ap;
-}
-
-
-std::unique_ptr<char> read_bytes(unsigned bytes) {
-    Poco::Net::SocketAddress sa(ip, async_port);
-    Poco::Net::StreamSocket dgs(sa);
-
-    auto buffer = std::make_unique<char>(bytes);
-
-    for (;;) {
-        Poco::Net::SocketAddress sender;
-        int n = dgs.receiveBytes(buffer.get(), bytes);
-    }
-
-    return std::move(buffer);
 }
 
 
