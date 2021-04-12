@@ -1,24 +1,38 @@
 #pragma once
 
-#include <atomic>
+#include <condition_variable>
 #include <cstddef>
+#include <vector>
+#include <mutex>
 
 constexpr unsigned CACHE_SIZE = 33101;
 
-extern std::mutex _mutex;
+class Frame {
+public:
+	explicit Frame(unsigned b);
 
+	char* get();
+	void copyTo(void* dest);
+	void remove();
 
-struct Frame {
-	char* mem;
-	unsigned bytes;
+private:
+	bool _delete{false};
+	char* _mem;
+	unsigned _bytes;
 };
 
 class FrameBuffer {
 public:
-	char* addFrame(unsigned size);
+	void addFrame(const Frame&& f);
 	void moveLastFrame(unsigned* data);
 private:
-	Frame _buf[CACHE_SIZE]{};
-	std::atomic_size_t _curr_write_frame{0};
-	std::atomic_size_t _curr_read_frame{0};
+	void incWriteFrame();
+	void incReadFrame();
+
+	std::vector<Frame> _buf;
+	std::size_t _curr_write_frame{0};
+	std::size_t _curr_read_frame{0};
+
+	std::mutex _mutex;
+	std::condition_variable _cv{};
 };
