@@ -264,7 +264,7 @@ void PopFrame(unsigned* data) {
 #endif
 }
 
-int ACQuisitionCont(AcqInfo info, unsigned* data, int chips_bitmap) {
+int ACQuisitionCont(AcqInfo info, int chips_bitmap) {
     ContAcq cmd(info, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
@@ -276,14 +276,11 @@ int ACQuisitionStop() {
     return resp.first;
 }
 
-int ACQuisition(AcqInfo info, unsigned frames, unsigned* data, int chips_bitmap) {
+int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap) {
 #ifdef DEBUG
     n_frames = frames;
     return 0;
 #else
-    if (!data)
-        return -1;
-
     NonContAcq cmd(info, frames, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;

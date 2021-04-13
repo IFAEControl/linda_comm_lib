@@ -11,18 +11,18 @@ int main() {
     unsigned data[14400];
     InitCommunication("172.16.17.94", 32000, 32001);
         /*AcqInfo info{10,10,10,true,true,false};
-                ACQuisitionCont(info, data, 1<<0);
-                PopFrame(data);
-                for(int i = 0; i < 10; i++)
-                    std::cout << data[i];
-                std::cout << "\ndone\n";*/ 
+        ACQuisitionCont(info, data, 1<<0);
+        PopFrame(data);
+        for(int i = 0; i < 10; i++)
+        	std::cout << data[i];
+        std::cout << "\ndone\n"; */
 
     auto rootMenu = std::make_unique<Menu>("linda");
 
     rootMenu -> Insert(
             "start", [&](std::ostream& out, int chip) { 
                 AcqInfo info{10,10,10,true,true,false};
-                ACQuisitionCont(info, data, 1<<chip);
+                ACQuisitionCont(info, 1<<chip);
                 out << "done\n"; 
         },
             "Start acquisition" 
@@ -31,7 +31,7 @@ int main() {
     rootMenu -> Insert(
             "start_2", [&](std::ostream& out, int chip, int frames) { 
                 AcqInfo info{10,10,10,true,true,false};
-                ACQuisition(info, frames, data, 1<<chip);
+                ACQuisition(info, frames, 1<<chip);
                 out << "done\n"; 
         },
             "Start non continuous acquisition" 
