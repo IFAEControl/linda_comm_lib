@@ -259,6 +259,7 @@ int PopFrame(unsigned* data) {
             data[(j * X_SIZE * Y_SIZE) + i] = i + (j*(X_SIZE * Y_SIZE));
         }
     }
+    return 0;
 #else
     return fb.moveLastFrame(data);
 #endif
