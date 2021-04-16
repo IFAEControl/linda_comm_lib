@@ -67,6 +67,24 @@ void FrameBuffer::cancel() {
 	_cv.notify_one();
 }
 
+void FrameBuffer::reset() {
+	_mutex.lock();
+	for(auto& e : _buf)
+		e.remove();
+	_buf.clear();
+	_curr_write_frame = 0;
+	_curr_read_frame = 0;
+	_mutex.unlock();
+}
+
+
+std::size_t FrameBuffer::getWriteFrame() const {
+	return _curr_write_frame;
+}
+
+std::size_t FrameBuffer::getReadFrame() const {
+	return _curr_read_frame;
+}
 
 void FrameBuffer::incWriteFrame() {
 	_curr_write_frame = ++_curr_write_frame % CACHE_SIZE;

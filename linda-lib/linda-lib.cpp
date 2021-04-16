@@ -333,3 +333,15 @@ int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], cons
     return 0;
 #endif
 }
+
+void ResetFrameBuffer() {
+    fb.reset();
+}
+
+std::size_t GetWriteFrame() {
+    return fb.getWriteFrame();
+}
+
+std::size_t GetReadFrame() {
+    return fb.getReadFrame();
+}

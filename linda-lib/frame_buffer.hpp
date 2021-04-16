@@ -26,6 +26,10 @@ public:
 	void addFrame(const Frame&& f);
 	int moveLastFrame(unsigned* data);
 	void cancel();
+	void reset();
+
+	std::size_t getWriteFrame() const;
+	std::size_t getReadFrame() const;
 private:
 	void incWriteFrame();
 	void incReadFrame();

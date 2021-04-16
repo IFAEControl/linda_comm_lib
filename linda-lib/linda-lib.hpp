@@ -38,3 +38,7 @@ extern "C" DllExport int DiscCharacF(const unsigned params[32], const unsigned r
 extern "C" DllExport int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[14400],
 	long int size, unsigned *counts, int chips_bitmap);
 
+extern "C" DllExport void ResetFrameBuffer();
+extern "C" DllExport std::size_t GetWriteFrame();
+extern "C" DllExport std::size_t GetReadFrame();
+
