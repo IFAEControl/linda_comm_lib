@@ -22,6 +22,9 @@ extern "C" DllExport int ReadTemperature(unsigned *temp, int chips_bitmap);
 extern "C" DllExport int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap);
 extern "C" DllExport int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap);
 extern "C" DllExport int ACQuisitionCont(AcqInfo info, int chips_bitmap);
+
+/// @brief copies last frame to provided pointer
+/// @return 0 in case of success, -1 if a cancel has been requested
 extern "C" DllExport int PopFrame(unsigned* data);
 extern "C" DllExport void cancelPopFrame();
 extern "C" DllExport int ACQuisitionStop();
