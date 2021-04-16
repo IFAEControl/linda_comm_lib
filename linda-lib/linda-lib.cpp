@@ -251,7 +251,7 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 #endif
 }
 
-void PopFrame(unsigned* data) {
+int PopFrame(unsigned* data) {
 #ifdef DEBUG
     // data = (unsigned*) malloc((n_frames * X_SIZE * Y_SIZE * N_COUNTERS) * sizeof(unsigned)); 
     for (uint32_t j = 0; j < n_frames*N_COUNTERS; j++) {
@@ -260,9 +260,14 @@ void PopFrame(unsigned* data) {
         }
     }
 #else
-    fb.moveLastFrame(data);
+    return fb.moveLastFrame(data);
 #endif
 }
+
+void cancelPopFrame() {
+    fb.cancel();
+}
+
 
 int ACQuisitionCont(AcqInfo info, int chips_bitmap) {
     ContAcq cmd(info, chips_bitmap);

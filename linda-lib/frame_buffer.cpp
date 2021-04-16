@@ -3,8 +3,6 @@
 
 #include "frame_buffer.hpp"
 
-// XXX: make it thread-safe and avoid burning cycles
-
 Frame::Frame(unsigned b) : _bytes(b) {
 	_mem =  new char[b];
 }
@@ -21,8 +19,6 @@ void Frame::remove() {
 	delete[] _mem;	
 }
 
-
-
 void FrameBuffer::addFrame(const Frame&& f) {
 	_mutex.lock();
 
@@ -38,17 +34,20 @@ void FrameBuffer::addFrame(const Frame&& f) {
 		incReadFrame();
 	}
 
-	_cv.notify_one();
 	_mutex.unlock();
-
+	_cv.notify_one();
 }
 
-void FrameBuffer::moveLastFrame(unsigned* data) {
+int FrameBuffer::moveLastFrame(unsigned* data) {
 	std::mutex cv_m;
     std::unique_lock<std::mutex> lk{cv_m};
 
 	// wait for a frame	
 	_cv.wait(lk);
+	if(_cancel) {
+		_cancel = false;
+		return -1;
+	}
 
 	_mutex.lock();
 	
@@ -56,11 +55,16 @@ void FrameBuffer::moveLastFrame(unsigned* data) {
 	frame.copyTo(data);
 	frame.remove();
 
-	// XXX: it will be nice to free the moved frame at this point
-
 	incReadFrame();
 
 	_mutex.unlock();
+
+	return 0;
+}
+
+void FrameBuffer::cancel() {
+	_cancel = true;
+	_cv.notify_one();
 }
 
 

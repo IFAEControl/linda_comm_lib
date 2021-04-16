@@ -24,10 +24,13 @@ private:
 class FrameBuffer {
 public:
 	void addFrame(const Frame&& f);
-	void moveLastFrame(unsigned* data);
+	int moveLastFrame(unsigned* data);
+	void cancel();
 private:
 	void incWriteFrame();
 	void incReadFrame();
+
+	bool _cancel{false};
 
 	std::vector<Frame> _buf;
 	std::size_t _curr_write_frame{0};
