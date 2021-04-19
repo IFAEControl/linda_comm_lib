@@ -88,11 +88,13 @@ if(MSVC)
             $<$<CONFIG:Release>:
                 /Oi;
                 /Gy
+                /Z7
             >
             /permissive-;
             /sdl;
             /W3;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+            /Z7;
+            # ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
@@ -107,7 +109,8 @@ if(MSVC)
             /permissive-;
             /sdl;
             /W3;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+            /Z7;
+            # ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     endif()
