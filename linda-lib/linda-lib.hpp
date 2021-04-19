@@ -22,7 +22,11 @@ extern "C" DllExport int ReadTemperature(unsigned *temp, int chips_bitmap);
 extern "C" DllExport int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap);
 extern "C" DllExport int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap);
 extern "C" DllExport int ACQuisitionCont(AcqInfo info, int chips_bitmap);
-extern "C" DllExport void PopFrame(unsigned* data);
+
+/// @brief copies last frame to provided pointer
+/// @return 0 in case of success, -1 if a cancel has been requested
+extern "C" DllExport int PopFrame(unsigned* data);
+extern "C" DllExport void cancelPopFrame();
 extern "C" DllExport int ACQuisitionStop();
 extern "C" DllExport int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
 extern "C" DllExport int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
@@ -33,4 +37,8 @@ extern "C" DllExport int DiscCharacF(const unsigned params[32], const unsigned r
 	long int size, unsigned *counts, int chips_bitmap);
 extern "C" DllExport int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[14400],
 	long int size, unsigned *counts, int chips_bitmap);
+
+extern "C" DllExport void ResetFrameBuffer();
+extern "C" DllExport std::size_t GetWriteFrame();
+extern "C" DllExport std::size_t GetReadFrame();
 

@@ -252,7 +252,7 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 #endif
 }
 
-void PopFrame(unsigned* data) {
+int PopFrame(unsigned* data) {
 #ifdef DEBUG
     // data = (unsigned*) malloc((n_frames * X_SIZE * Y_SIZE * N_COUNTERS) * sizeof(unsigned)); 
     for (uint32_t j = 0; j < N_WORDS_PIXEL * n_frames; j++) {
@@ -260,10 +260,16 @@ void PopFrame(unsigned* data) {
             data[(j * X_SIZE * Y_SIZE) + i] = 10289311;//i; //+(1000*j)
         }
     }
+    return 0;
 #else
-    fb.moveLastFrame(data);
+    return fb.moveLastFrame(data);
 #endif
 }
+
+void cancelPopFrame() {
+    fb.cancel();
+}
+
 
 int ACQuisitionCont(AcqInfo info, int chips_bitmap) {
     ContAcq cmd(info, chips_bitmap);
@@ -328,4 +334,16 @@ int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], cons
 #else
     return 0;
 #endif
+}
+
+void ResetFrameBuffer() {
+    fb.reset();
+}
+
+std::size_t GetWriteFrame() {
+    return fb.getWriteFrame();
+}
+
+std::size_t GetReadFrame() {
+    return fb.getReadFrame();
 }
