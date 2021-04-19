@@ -162,3 +162,6 @@ StopAcq::StopAcq() : Command("acq_stop") {
 
 ResetCamera::ResetCamera() : Command("camera_reset") {
 }
+
+ResetController::ResetController() : Command("controller_reset") {
+}

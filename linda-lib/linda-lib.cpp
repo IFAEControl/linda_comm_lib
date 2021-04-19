@@ -81,6 +81,17 @@ int CameraReset(){
 #endif
 }
 
+int ControllerReset() {
+#ifdef DEBUG
+    return 0;
+#else
+    ResetController cmd;
+    auto resp = sendCmd(cmd);
+    return resp.first;
+#endif
+}
+
+
 int ReadTemperature(unsigned* temp, int chips_bitmap) {
     if(!temp)
         return -1;

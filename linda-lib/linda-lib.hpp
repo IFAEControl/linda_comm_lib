@@ -10,6 +10,7 @@
 
 extern "C" DllExport int InitCommunication(const char* str, int sync_port, int async_port);
 extern "C" DllExport int CameraReset();
+extern "C" DllExport int ControllerReset();
 extern "C" DllExport int ChipRegisterWrite(const unsigned in[5], int chips_bitmap);
 extern "C" DllExport int ChipRegisterRead(unsigned out[5], int chips_bitmap);
 extern "C" DllExport int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap);
