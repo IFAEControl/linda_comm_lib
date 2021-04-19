@@ -108,8 +108,6 @@ conan_cmake_run(
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Z7")
-
 ################################################################################
 # Sub-projects
 ################################################################################
