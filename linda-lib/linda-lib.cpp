@@ -14,6 +14,7 @@
     #define X_SIZE 20
     #define Y_SIZE 8
     #define N_COUNTERS 6
+    #define N_WORDS_PIXEL 3
 
 
     unsigned int n_frames = 0;
