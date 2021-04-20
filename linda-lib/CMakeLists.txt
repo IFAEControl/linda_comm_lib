@@ -1,9 +1,8 @@
 set(PROJECT_NAME linda-lib)
 
-find_package(cli REQUIRED)
-
 if(MSVC)
     add_definitions(-DDEBUG)
+    include_directories("C:/Program Files (x86)/cli/include/")
 endif()
 
 ################################################################################
