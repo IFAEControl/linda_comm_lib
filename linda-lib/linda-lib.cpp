@@ -254,10 +254,11 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 
 int PopFrame(unsigned* data) {
 #ifdef DEBUG
-    // data = (unsigned*) malloc((n_frames * X_SIZE * Y_SIZE * N_COUNTERS) * sizeof(unsigned)); 
-    for (uint32_t j = 0; j < N_WORDS_PIXEL * n_frames; j++) {
+    for (uint32_t j = 0; j < n_frames; j++) {
         for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
-            data[(j * X_SIZE * Y_SIZE) + i] = 10289311;//i; //+(1000*j)
+            for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
+                data[(j * X_SIZE * Y_SIZE * N_WORDS_PIXEL) + (i * N_WORDS_PIXEL) + k] = i + (i << 16);
+            }
         }
     }
     return 0;
