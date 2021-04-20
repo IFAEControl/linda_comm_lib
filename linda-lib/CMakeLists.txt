@@ -29,10 +29,10 @@ generate_export_header(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-temp ${CONAN_LIBS})
 
 
-if(NOT MSVC)
+#if(NOT MSVC)
     add_executable(test_client "test_client.cpp")
     target_link_libraries(test_client linda-lib)
-endif()
+    #endif()
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE lindalib)
