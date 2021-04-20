@@ -1,5 +1,7 @@
 set(PROJECT_NAME linda-lib)
 
+find_package(cli REQUIRED)
+
 if(MSVC)
     add_definitions(-DDEBUG)
 endif()
