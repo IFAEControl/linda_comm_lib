@@ -20,9 +20,13 @@
 
 using namespace cli;
 
-int main() {
+int main(int argc, char* argv[]) {
     unsigned data[14400];
-    InitCommunication("172.16.17.94", 32000, 32001);
+    std::string ip = "172.16.17.94";
+    if(argc == 2) 
+        ip = argv[1];
+
+    InitCommunication(ip.c_str(), 32000, 32001);
 
 
         /*AcqInfo info{10,10,10,true,true,false};
