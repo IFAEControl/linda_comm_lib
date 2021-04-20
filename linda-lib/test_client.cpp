@@ -127,6 +127,13 @@ int main() {
             "Read pixel register for a single chip"
     );
 
+    rootMenu -> Insert(
+            "reset_ctrlr", [&](std::ostream& out) { 
+                ControllerReset();
+                out << "done \n"; 
+            },
+            "Reset controller" 
+    );
 
     Cli cli(std::move(rootMenu));
     CliFileSession input(cli);

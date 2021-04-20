@@ -131,3 +131,8 @@ class ResetCamera : public Command {
 public:
     ResetCamera();
 };
+
+class ResetController : public Command {
+public:
+    ResetController();
+};
