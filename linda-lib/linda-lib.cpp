@@ -352,10 +352,10 @@ void ResetFrameBuffer() {
     fb.reset();
 }
 
-std::size_t GetWriteFrame() {
+unsigned GetWriteFrame() {
     return fb.getWriteFrame();
 }
 
-std::size_t GetReadFrame() {
+unsigned GetReadFrame() {
     return fb.getReadFrame();
 }

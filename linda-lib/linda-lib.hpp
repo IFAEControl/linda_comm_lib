@@ -40,6 +40,6 @@ extern "C" DllExport int FullArrayDiscCharacF(const unsigned params[32], const u
 	long int size, unsigned *counts, int chips_bitmap);
 
 extern "C" DllExport void ResetFrameBuffer();
-extern "C" DllExport std::size_t GetWriteFrame();
-extern "C" DllExport std::size_t GetReadFrame();
+extern "C" DllExport unsigned GetWriteFrame();
+extern "C" DllExport unsigned GetReadFrame();
 
