@@ -1,7 +1,7 @@
 set(PROJECT_NAME linda-lib)
 
 if(MSVC)
-    add_definitions(-DDEBUG)
+    #add_definitions(-DDEBUG)
     include_directories("C:/Program Files (x86)/cli/include/")
 endif()
 
