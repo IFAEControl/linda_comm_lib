@@ -12,8 +12,6 @@ extern FrameBuffer fb;
 
 void init_thread();
 
-Message send_command(Message& c);
-
 template<typename T>
 T send_command(T& c);
 

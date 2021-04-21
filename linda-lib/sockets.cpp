@@ -57,20 +57,6 @@ void set_ports(unsigned p, unsigned ap) noexcept {
     async_port = ap;
 }
 
-Message send_command(Message& c) {
-    Poco::Net::SocketAddress sa(ip, port);
-    Poco::Net::StreamSocket socket(sa);
-    socket.sendBytes(&c.header, HEADER_BYTE_SIZE);
-    Poco::Net::SocketStream str(socket);
-    str << c.body;
-    str.flush();
-    std::stringstream ss;
-    Poco::StreamCopier::copyStream(str, ss);
-    std::memcpy(&c.header, ss.str().c_str(), HEADER_BYTE_SIZE);
-    c.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
-    return c;
-}
-
 template<typename T>
 T send_command(T& c) {
     auto& m = c.getMessage();
