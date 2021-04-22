@@ -16,7 +16,10 @@ void Frame::copyTo(void* dest) {
 }
 
 void Frame::remove() {
-	delete[] _mem;	
+	if(_mem != nullptr) {
+		delete[] _mem;	
+		_mem = nullptr;
+	}
 }
 
 void FrameBuffer::addFrame(const Frame&& f) {
