@@ -283,7 +283,7 @@ int PopFrame(unsigned* data) {
 #endif
 }
 
-void cancelPopFrame() {
+void CancelPopFrame() {
     fb.cancel();
 }
 
