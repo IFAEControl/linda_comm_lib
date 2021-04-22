@@ -34,8 +34,8 @@ void FrameBuffer::addFrame(const Frame&& f) {
 		incReadFrame();
 	}
 
-	_mutex.unlock();
 	_cv.notify_one();
+	_mutex.unlock();
 }
 
 int FrameBuffer::moveLastFrame(unsigned* data) {
