@@ -9,6 +9,7 @@
 #endif
 
 extern "C" DllExport int InitCommunication(const char* str, int sync_port, int async_port);
+extern "C" DllExport void CloseCommunication();
 extern "C" DllExport int CameraReset();
 extern "C" DllExport int ControllerReset();
 extern "C" DllExport int ChipRegisterWrite(const unsigned in[5], int chips_bitmap);
@@ -27,7 +28,7 @@ extern "C" DllExport int ACQuisitionCont(AcqInfo info, int chips_bitmap);
 /// @brief copies last frame to provided pointer
 /// @return 0 in case of success, -1 if a cancel has been requested
 extern "C" DllExport int PopFrame(unsigned* data);
-extern "C" DllExport void cancelPopFrame();
+extern "C" DllExport void CancelPopFrame();
 extern "C" DllExport int ACQuisitionStop();
 extern "C" DllExport int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
 extern "C" DllExport int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap);

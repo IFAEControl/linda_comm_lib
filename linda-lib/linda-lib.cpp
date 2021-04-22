@@ -68,6 +68,11 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     return 0;
 }
 
+void CloseCommunication() {
+    join_thread();
+}
+
+
 int CameraReset(){
 #ifdef DEBUG
     for (int i=0; i<5; i++)

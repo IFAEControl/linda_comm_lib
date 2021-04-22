@@ -32,6 +32,12 @@ void init_thread() {
     }
 }
 
+void join_thread() {
+    if(thread_running)
+        reader.join();
+}
+
+
 void reader_thread() {
     Poco::Net::SocketAddress sa(ip, async_port);
     Poco::Net::StreamSocket dgs(sa);
