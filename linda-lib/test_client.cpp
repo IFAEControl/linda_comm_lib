@@ -139,6 +139,15 @@ int main(int argc, char* argv[]) {
             "Reset controller" 
     );
 
+    rootMenu -> Insert(
+            "reset_fb", [&](std::ostream& out) { 
+                ResetFrameBuffer();
+                out << "done \n"; 
+            },
+            "Reset frame buffer" 
+    );
+
+
     Cli cli(std::move(rootMenu));
     CliFileSession input(cli);
     SetColor();
