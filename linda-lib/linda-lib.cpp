@@ -283,6 +283,14 @@ int PopFrame(unsigned* data) {
 #endif
 }
 
+int PopFrames(unsigned* data, unsigned frames) {
+    unsigned bytes = 0;
+    for(unsigned i = 0; i < frames; i++) {
+        bytes = fb.moveLastFrame(data + bytes);
+    }
+    return 0;
+}
+
 void CancelPopFrame() {
     fb.cancel();
 }

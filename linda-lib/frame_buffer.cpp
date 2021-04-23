@@ -11,6 +11,11 @@ char* Frame::get(){
 	return _mem;
 }
 
+unsigned Frame::getBytes() const {
+	return _bytes;
+}
+
+
 void Frame::copyTo(void* dest) {
 	std::memcpy(dest, _mem, _bytes);
 }
@@ -42,6 +47,7 @@ void FrameBuffer::addFrame(const Frame&& f) {
 }
 
 int FrameBuffer::moveLastFrame(unsigned* data) {
+	unsigned bytes = 0;
 	std::mutex cv_m;
     std::unique_lock<std::mutex> lk{cv_m};
 
@@ -56,13 +62,14 @@ int FrameBuffer::moveLastFrame(unsigned* data) {
 	
 	auto frame = _buf.at(_curr_read_frame);
 	frame.copyTo(data);
+	bytes = frame.getBytes();
 	frame.remove();
 
 	incReadFrame();
 
 	_mutex.unlock();
 
-	return 0;
+	return bytes;
 }
 
 void FrameBuffer::cancel() {

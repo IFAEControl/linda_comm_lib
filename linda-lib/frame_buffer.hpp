@@ -12,6 +12,7 @@ public:
 	explicit Frame(unsigned b);
 
 	char* get();
+	unsigned getBytes() const;
 	void copyTo(void* dest);
 	void remove();
 

@@ -28,6 +28,7 @@ extern "C" DllExport int ACQuisitionCont(AcqInfo info, int chips_bitmap);
 /// @brief copies last frame to provided pointer
 /// @return 0 in case of success, -1 if a cancel has been requested
 extern "C" DllExport int PopFrame(unsigned* data);
+extern "C" DllExport int PopFrames(unsigned* data, unsigned frames);
 extern "C" DllExport void CancelPopFrame();
 extern "C" DllExport int ACQuisitionStop();
 extern "C" DllExport int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
