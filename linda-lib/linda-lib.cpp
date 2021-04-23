@@ -287,6 +287,8 @@ int PopFrames(unsigned* data, unsigned frames) {
     unsigned bytes = 0;
     for(unsigned i = 0; i < frames; i++) {
         bytes = fb.moveLastFrame(data + bytes);
+        if(bytes < 0)
+            return bytes;
     }
     return 0;
 }
