@@ -1,10 +1,5 @@
 set(PROJECT_NAME linda-lib)
 
-if(MSVC)
-    #add_definitions(-DDEBUG)
-    include_directories("C:/Program Files (x86)/cli/include/")
-endif()
-
 option(BUILD_CLIENT "Build client" OFF)
 
 ################################################################################
@@ -86,6 +81,7 @@ endif()
 # Compile and link options
 ################################################################################
 if(MSVC)
+    include_directories("C:/Program Files (x86)/cli/include/")
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
