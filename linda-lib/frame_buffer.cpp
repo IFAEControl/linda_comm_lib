@@ -60,7 +60,7 @@ int FrameBuffer::moveLastFrame(unsigned* data) {
 
 	_mutex.lock();
 	
-	auto frame = _buf.at(_curr_read_frame);
+	auto& frame = _buf.at(_curr_read_frame);
 	frame.copyTo(data);
 	bytes = frame.getBytes();
 	frame.remove();
@@ -79,7 +79,7 @@ void FrameBuffer::cancel() {
 
 void FrameBuffer::reset() {
 	_mutex.lock();
-	for(auto& e : _buf)
+	for(auto&& e : _buf)
 		e.remove();
 	_buf.clear();
 	_curr_write_frame = 0;
