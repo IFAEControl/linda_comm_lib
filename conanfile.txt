@@ -2,8 +2,18 @@
 Poco/1.9.3@pocoproject/stable
 nlohmann_json/3.9.1
 spdlog/1.8.0 
+qt/5.15.2
+zlib/1.2.11
 
 [options]
+qt:gui=False
+qt:openssl=False
+qt:widgets=False
+qt:with_libpng=False
+qt:with_odbc=False
+qt:with_pcre2=False
+qt:with_pq=False
+qt:with_sqlite3=False
 Poco:enable_mongodb=False
 Poco:enable_pdf=False
 Poco:enable_redis=False
