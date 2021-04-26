@@ -9,6 +9,7 @@
 #include "linda-lib.hpp"
 #include "commands.hpp"
 #include "sockets.hpp"
+#include "log.hpp"
 
 #ifdef DEBUG
     #define X_SIZE 20
@@ -41,16 +42,14 @@
 
 template <typename T>
 std::pair<int, T> sendCmd(T& cmd) try {
-    spdlog::set_level(spdlog::level::debug);
-    
     auto resp = send_command(cmd);
-    spdlog::debug(resp);
+    logger->debug(resp);
     return {0, resp};
 } catch(std::exception& e) {
-    spdlog::critical(e.what());
+    logger->critical(e.what());
     return {-1, cmd};
 } catch(...) {
-    spdlog::critical("Unknown error");
+    logger->critical("Unknown error");
     return {-2, cmd};
 }
 
