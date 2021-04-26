@@ -9,7 +9,6 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
     std::vector<spdlog::sink_ptr> sinks;
 
     auto s = std::make_shared<spsinks::stdout_color_sink_mt>();
-    s->set_color(spdlog::level::info, s->white);
     sinks.emplace_back(s);
     sinks.back()->set_level(spdlog::level::info);
 
