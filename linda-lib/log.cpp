@@ -1,6 +1,5 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/syslog_sink.h>
 
 #include "log.hpp"
 
@@ -13,13 +12,6 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
     s->set_color(spdlog::level::info, s->white);
     sinks.emplace_back(s);
     sinks.back()->set_level(spdlog::level::info);
-
-#if SPDLOG_VERSION < 10400
-    sinks.emplace_back(std::make_shared<spsinks::syslog_sink<std::mutex>>());
-#else
-    sinks.emplace_back(std::make_shared<spsinks::syslog_sink<std::mutex>>("", 0, LOG_USER, true));
-#endif
-    sinks.back()->set_level(spdlog::level::trace);
 
 #ifdef _WIN32
     std::string tmp_dir = "C:\\Windows\\Temp\\";
