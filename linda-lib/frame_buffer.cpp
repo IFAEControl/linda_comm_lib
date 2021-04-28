@@ -91,6 +91,7 @@ void FrameBuffer::reset() {
 	_buf.clear();
 	_curr_write_frame = 0;
 	_curr_read_frame = 0;
+	_available_frames = 0;
 	_mutex.unlock();
 }
 
