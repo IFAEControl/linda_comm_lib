@@ -38,11 +38,10 @@ struct BaseHeaderType {
 };
 
 struct AcqInfo {
-    unsigned pulses_width;
-    unsigned pulses;
+    unsigned int pulses_width;
+    unsigned int pulses;
     unsigned short timer_reg;
     bool belt_dir;
     bool test_pulses;
     bool tdi;
 };
-

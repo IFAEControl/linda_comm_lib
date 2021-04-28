@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "frame_buffer.hpp"
+#include "log.hpp"
 
 Frame::Frame(unsigned b) : _bytes(b) {
 	_mem =  new char[b];
@@ -28,6 +29,7 @@ void Frame::remove() {
 }
 
 void FrameBuffer::addFrame(const Frame&& f) {
+	logger->debug("Adding new frame to buffer");
 	_mutex.lock();
 
 	if(_curr_write_frame >= _buf.size())
@@ -42,21 +44,25 @@ void FrameBuffer::addFrame(const Frame&& f) {
 		incReadFrame();
 	}
 
+	_available_frames++;
 	_cv.notify_one();
 	_mutex.unlock();
 }
 
 int FrameBuffer::moveLastFrame(unsigned* data) {
+	logger->debug("Waiting for available frames");	
 	unsigned bytes = 0;
 	std::mutex cv_m;
     std::unique_lock<std::mutex> lk{cv_m};
 
 	// wait for a frame	
-	_cv.wait(lk);
+	_cv.wait(lk, [&]{return _available_frames > 0;});
 	if(_cancel) {
 		_cancel = false;
 		return -1;
 	}
+
+	logger->debug("Retrieveing frame");
 
 	_mutex.lock();
 	
@@ -67,6 +73,7 @@ int FrameBuffer::moveLastFrame(unsigned* data) {
 
 	incReadFrame();
 
+	_available_frames--;
 	_mutex.unlock();
 
 	return bytes;

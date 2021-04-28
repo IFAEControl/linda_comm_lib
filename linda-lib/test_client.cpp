@@ -54,18 +54,18 @@ int main(int argc, char* argv[]) {
     );
 
     rootMenu -> Insert(
-            "start", [&](std::ostream& out, int chip) { 
+            "start", [&](std::ostream& out, int bitmap_val) { 
                 AcqInfo info{10,10,10,true,true,false};
-                ACQuisitionCont(info, 1<<chip);
+                ACQuisitionCont(info, bitmap_val);
                 out << "done\n"; 
         },
             "Start acquisition" 
     );
 
     rootMenu -> Insert(
-            "start_2", [&](std::ostream& out, int chip, int frames) { 
+            "start_2", [&](std::ostream& out, int bitmap_val, int frames) { 
                 AcqInfo info{1000,4,2500,false,true,false};
-                ACQuisition(info, frames, 1<<chip);
+                ACQuisition(info, frames, bitmap_val);
                 out << "done\n"; 
         },
             "Start non continuous acquisition" 

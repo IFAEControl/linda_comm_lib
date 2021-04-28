@@ -136,6 +136,7 @@ NonContAcq::NonContAcq(const AcqInfo& info, unsigned frames, unsigned chips_bitm
     args["tdi"] = info.tdi;
     args["test_pulses"] = info.test_pulses;
     args["timer_reg"] = info.timer_reg;
+    args["continuous"] = false;
     m.body["arguments"] = args;
 }
 
@@ -143,7 +144,7 @@ LongInt<480> NonContAcq::getAnswer() {
     return m.body["answer"]["frame"];
 }
 
-ContAcq::ContAcq(const AcqInfo& info, unsigned chips_bitmap) : Command("acq_cont") {
+ContAcq::ContAcq(const AcqInfo& info, unsigned chips_bitmap) : Command("acq") {
     json args;
     args["belt_dir"] = info.belt_dir;
     args["chips_bitmap"] = chips_bitmap;
@@ -152,6 +153,7 @@ ContAcq::ContAcq(const AcqInfo& info, unsigned chips_bitmap) : Command("acq_cont
     args["tdi"] = info.tdi;
     args["test_pulses"] = info.test_pulses;
     args["timer_reg"] = info.timer_reg;
+    args["continuous"] = true;
     m.body["arguments"] = args;
 }
 
