@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <vector>
 #include <mutex>
+#include <atomic>
 
 constexpr unsigned CACHE_SIZE = 33101;
 
@@ -40,6 +41,7 @@ private:
 	std::vector<Frame> _buf;
 	std::size_t _curr_write_frame{0};
 	std::size_t _curr_read_frame{0};
+	std::atomic_size_t _available_frames{0};
 
 	std::mutex _mutex;
 	std::condition_variable _cv{};
