@@ -11,14 +11,14 @@
 #include "sockets.hpp"
 #include "log.hpp"
 
+//#define DEBUG
+
 #ifdef DEBUG
     #define X_SIZE 20
     #define Y_SIZE 8
     #define N_COUNTERS 6
     #define N_WORDS_PIXEL 3
 
-
-    unsigned int n_frames = 0;
     unsigned int pixel_register[480];
     unsigned int chip_register[5];
     unsigned int chips_ids[30] = {0xA1,0xA2,0xA3,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF,
@@ -269,7 +269,20 @@ int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
 
 int PopFrame(unsigned* data) {
 #ifdef DEBUG
-    for (uint32_t j = 0; j < n_frames; j++) {
+        for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
+            for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
+                data[(i * N_WORDS_PIXEL) + k] = i + (i << 16);
+            }
+        }
+    return 0;
+#else
+    return fb.moveLastFrame(data);
+#endif
+}
+
+int PopFrames(unsigned* data, unsigned frames) {
+#ifdef DEBUG
+    for (uint32_t j = 0; j < frames; j++) {
         for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
             for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
                 data[(j * X_SIZE * Y_SIZE * N_WORDS_PIXEL) + (i * N_WORDS_PIXEL) + k] = i + (i << 16);
@@ -278,11 +291,6 @@ int PopFrame(unsigned* data) {
     }
     return 0;
 #else
-    return fb.moveLastFrame(data);
-#endif
-}
-
-int PopFrames(unsigned* data, unsigned frames) {
     unsigned bytes = 0;
     for(unsigned i = 0; i < frames; i++) {
         bytes = fb.moveLastFrame(data + bytes);
@@ -290,6 +298,7 @@ int PopFrames(unsigned* data, unsigned frames) {
             return bytes;
     }
     return 0;
+#endif
 }
 
 void CancelPopFrame() {
