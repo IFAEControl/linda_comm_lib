@@ -66,6 +66,8 @@ T Networking::sendCommand(T& c) {
     std::stringstream ss;
     Poco::StreamCopier::copyStream(str, ss);
     std::memcpy(&m.header, ss.str().c_str(), HEADER_BYTE_SIZE);
+    if(m.header.packtype == HEADER_PACKTYPE::ERROR)
+        throw std::runtime_error("Command error");
     m.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
     return c;
 }
