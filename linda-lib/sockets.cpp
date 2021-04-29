@@ -13,6 +13,7 @@
 #include "sockets.hpp"
 
 using Poco::Net::IPAddress;
+using namespace CMD;
 
 static std::string ip = "8.8.8.8";
 unsigned port = 32000;
@@ -80,20 +81,20 @@ T send_command(T& c) {
     return c;
 }
 
-template Temperature send_command<Temperature>(Temperature& c);
-template HVSet send_command<HVSet>(HVSet& c);
-template TPDACSet send_command<TPDACSet>(TPDACSet& c);
-template WriteChipRegister send_command<WriteChipRegister>(WriteChipRegister& c);
-template ReadChipRegister send_command<ReadChipRegister>(ReadChipRegister& c);
-template WritePixelRegister send_command<WritePixelRegister>(WritePixelRegister& c);
-template ReadPixelRegister send_command<ReadPixelRegister>(ReadPixelRegister& c);
-template ChipIDRead send_command<ChipIDRead>(ChipIDRead& c);
-template FullChipIDRead send_command<FullChipIDRead>(FullChipIDRead& c);
-template ReadFullArrayChipRegister send_command<ReadFullArrayChipRegister>(ReadFullArrayChipRegister& c);
-template ReadFullArrayPixelRegister send_command<ReadFullArrayPixelRegister>(ReadFullArrayPixelRegister& c);
-template NonContAcq send_command<NonContAcq>(NonContAcq& c);
-template ContAcq send_command<ContAcq>(ContAcq& c);
-template StopAcq send_command<StopAcq>(StopAcq& c);
-template ResetCamera send_command<ResetCamera>(ResetCamera& c);
-template ResetController send_command<ResetController>(ResetController& c); 
-template FloodNormFactorsLoad send_command<FloodNormFactorsLoad>(FloodNormFactorsLoad& c);
+template ReadTemperature send_command<ReadTemperature>(ReadTemperature& c);
+template SetHV send_command<SetHV>(SetHV& c);
+template SetTPDAC send_command<SetTPDAC>(SetTPDAC& c);
+template ChipRegisterWrite send_command<ChipRegisterWrite>(ChipRegisterWrite& c);
+template ChipRegisterRead send_command<ChipRegisterRead>(ChipRegisterRead& c);
+template PixelRegisterWrite send_command<PixelRegisterWrite>(PixelRegisterWrite& c);
+template PixelRegisterRead send_command<PixelRegisterRead>(PixelRegisterRead& c);
+template ReadEricaID send_command<ReadEricaID>(ReadEricaID& c);
+template FullArrayReadEricaID send_command<FullArrayReadEricaID>(FullArrayReadEricaID& c);
+template FullArrayChipRegisterRead send_command<FullArrayChipRegisterRead>(FullArrayChipRegisterRead& c);
+template FullArrayPixelRegisterRead send_command<FullArrayPixelRegisterRead>(FullArrayPixelRegisterRead& c);
+template ACQuisition send_command<ACQuisition>(ACQuisition& c);
+template ACQuisitionCont send_command<ACQuisitionCont>(ACQuisitionCont& c);
+template ACQuisitionStop send_command<ACQuisitionStop>(ACQuisitionStop& c);
+template CameraReset send_command<CameraReset>(CameraReset& c);
+template ControllerReset send_command<ControllerReset>(ControllerReset& c); 
+template LoadFloodNormFactors send_command<LoadFloodNormFactors>(LoadFloodNormFactors& c);
