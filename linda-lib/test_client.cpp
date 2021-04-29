@@ -147,6 +147,13 @@ int main(int argc, char* argv[]) {
             "Reset frame buffer" 
     );
 
+    rootMenu -> Insert(
+            "load_factors", [&](std::ostream& out) {
+                LoadFloodNormFactors(data, 5);
+            },
+            "Load norm factors"
+    );
+
 
     Cli cli(std::move(rootMenu));
     CliFileSession input(cli);
