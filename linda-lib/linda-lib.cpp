@@ -11,7 +11,7 @@
 #include "sockets.hpp"
 #include "log.hpp"
 
-//#define DEBUG
+Networking n;
 
 #ifdef DEBUG
     #define X_SIZE 20
@@ -42,7 +42,7 @@
 
 template <typename T>
 std::pair<int, T> sendCmd(T& cmd) try {
-    auto resp = send_command(cmd);
+    auto resp = n.sendCommand(cmd);
     logger->debug(resp);
     return {0, resp};
 } catch(std::exception& e) {
@@ -60,15 +60,14 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
 #else
-    init_thread();
-    set_dest_ip(str);
-    set_ports(sync_port, async_port);
+    n.initReceiverThread();
+    n.configure(str, sync_port, async_port);
 #endif
     return 0;
 }
 
 void CloseCommunication() {
-    join_thread();
+    n.joinThread();
 }
 
 
@@ -355,6 +354,9 @@ int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], cons
     return 0;
 #endif
 }
+
+
+// Internal DLL functions for debugging purposes
 
 void ResetBuffer() {
     fb.reset();

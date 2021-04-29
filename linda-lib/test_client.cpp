@@ -152,4 +152,6 @@ int main(int argc, char* argv[]) {
     CliFileSession input(cli);
     SetColor();
     input.Start();
+
+    CloseCommunication();
 }

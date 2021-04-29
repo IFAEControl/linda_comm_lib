@@ -1,6 +1,7 @@
 #pragma once
 
 #include <condition_variable>
+#include <thread>
 
 #include <nlohmann/json.hpp>
 
@@ -10,12 +11,18 @@
 
 extern FrameBuffer fb;
 
-void init_thread();
+class Networking {
+public:
+	void configure(std::string ip, unsigned port, unsigned aport);
+	template<typename T> T sendCommand(T& c);
+	void initReceiverThread();
+	void joinThread();
+private:
+	void readerThread();
 
-template<typename T>
-T send_command(T& c);
-
-void set_dest_ip(const std::string& ip) noexcept;
-void set_ports(unsigned p, unsigned ap) noexcept;
-
-void join_thread();
+	std::string _ip{"8.8.8.8"};
+	unsigned _port{32000}; 
+	unsigned _async_port{32001};
+	bool _thread_running{false};
+	std::thread _reader{};
+};
