@@ -11,6 +11,8 @@
 
 #include "sockets.hpp"
 
+#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V& c)
+
 using Poco::Net::IPAddress;
 using namespace CMD;
 
@@ -68,20 +70,20 @@ T Networking::sendCommand(T& c) {
     return c;
 }
 
-template ReadTemperature Networking::sendCommand<ReadTemperature>(ReadTemperature& c);
-template SetHV Networking::sendCommand<SetHV>(SetHV& c);
-template SetTPDAC Networking::sendCommand<SetTPDAC>(SetTPDAC& c);
-template ChipRegisterWrite Networking::sendCommand<ChipRegisterWrite>(ChipRegisterWrite& c);
-template ChipRegisterRead Networking::sendCommand<ChipRegisterRead>(ChipRegisterRead& c);
-template PixelRegisterWrite Networking::sendCommand<PixelRegisterWrite>(PixelRegisterWrite& c);
-template PixelRegisterRead Networking::sendCommand<PixelRegisterRead>(PixelRegisterRead& c);
-template ReadEricaID Networking::sendCommand<ReadEricaID>(ReadEricaID& c);
-template FullArrayReadEricaID Networking::sendCommand<FullArrayReadEricaID>(FullArrayReadEricaID& c);
-template FullArrayChipRegisterRead Networking::sendCommand<FullArrayChipRegisterRead>(FullArrayChipRegisterRead& c);
-template FullArrayPixelRegisterRead Networking::sendCommand<FullArrayPixelRegisterRead>(FullArrayPixelRegisterRead& c);
-template ACQuisition Networking::sendCommand<ACQuisition>(ACQuisition& c);
-template ACQuisitionCont Networking::sendCommand<ACQuisitionCont>(ACQuisitionCont& c);
-template ACQuisitionStop Networking::sendCommand<ACQuisitionStop>(ACQuisitionStop& c);
-template CameraReset Networking::sendCommand<CameraReset>(CameraReset& c);
-template ControllerReset Networking::sendCommand<ControllerReset>(ControllerReset& c); 
-template LoadFloodNormFactors Networking::sendCommand<LoadFloodNormFactors>(LoadFloodNormFactors& c);
+TEMPLATE_COMMAND(ReadTemperature);
+TEMPLATE_COMMAND(SetHV);
+TEMPLATE_COMMAND(SetTPDAC);
+TEMPLATE_COMMAND(ChipRegisterWrite);
+TEMPLATE_COMMAND(ChipRegisterRead);
+TEMPLATE_COMMAND(PixelRegisterWrite);
+TEMPLATE_COMMAND(PixelRegisterRead);
+TEMPLATE_COMMAND(ReadEricaID);
+TEMPLATE_COMMAND(FullArrayReadEricaID);
+TEMPLATE_COMMAND(FullArrayChipRegisterRead);
+TEMPLATE_COMMAND(FullArrayPixelRegisterRead);
+TEMPLATE_COMMAND(ACQuisition);
+TEMPLATE_COMMAND(ACQuisitionCont);
+TEMPLATE_COMMAND(ACQuisitionStop);
+TEMPLATE_COMMAND(CameraReset);
+TEMPLATE_COMMAND(ControllerReset);
+TEMPLATE_COMMAND(LoadFloodNormFactors);
