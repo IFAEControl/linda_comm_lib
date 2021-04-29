@@ -167,3 +167,10 @@ ResetCamera::ResetCamera() : Command("camera_reset") {
 
 ResetController::ResetController() : Command("controller_reset") {
 }
+
+FloodNormFactorsLoad::FloodNormFactorsLoad(LongInt<60>& val, unsigned chips_bitmap) : Command("load_flood_norm_factors") {
+    json args;
+    args["factors"] = val.val();
+    m.body["chips_bitmap"] = chips_bitmap;
+    m.body["arguments"] = args;
+}

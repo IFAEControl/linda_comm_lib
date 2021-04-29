@@ -31,8 +31,6 @@ extern "C" DllExport int PopFrame(unsigned* data);
 extern "C" DllExport int PopFrames(unsigned* data, unsigned frames);
 extern "C" DllExport void CancelPopFrame();
 extern "C" DllExport int ACQuisitionStop();
-extern "C" DllExport int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
-extern "C" DllExport int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap);
 extern "C" DllExport int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap);
 extern "C" DllExport int SetHV(unsigned counts);
 extern "C" DllExport int SetTPDAC(unsigned counts);

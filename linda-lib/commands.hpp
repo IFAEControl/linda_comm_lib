@@ -136,3 +136,8 @@ class ResetController : public Command {
 public:
     ResetController();
 };
+
+class FloodNormFactorsLoad : public Command {
+public:
+    FloodNormFactorsLoad(LongInt<60>& val, unsigned chips_bitmap);
+};

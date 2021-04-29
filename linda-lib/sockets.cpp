@@ -96,3 +96,4 @@ template ContAcq send_command<ContAcq>(ContAcq& c);
 template StopAcq send_command<StopAcq>(StopAcq& c);
 template ResetCamera send_command<ResetCamera>(ResetCamera& c);
 template ResetController send_command<ResetController>(ResetController& c); 
+template FloodNormFactorsLoad send_command<FloodNormFactorsLoad>(FloodNormFactorsLoad& c);

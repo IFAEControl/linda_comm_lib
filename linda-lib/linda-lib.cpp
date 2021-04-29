@@ -329,27 +329,14 @@ int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap) {
 #endif
 }
 
-int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DEBUG
-    return 0;
-#else
-    return 0;
-#endif
-}
-
-int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DEBUG
-    return 0;
-#else
-    return 0;
-#endif
-}
-
 int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 #ifdef DEBUG
     return 0;
 #else
-    return 0;
+    LongInt<60> factors = in;
+    FloodNormFactorsLoad cmd(factors, chips_bitmap);
+    auto resp = sendCmd(cmd);
+    return resp.first;
 #endif
 }
 
