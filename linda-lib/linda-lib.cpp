@@ -11,13 +11,14 @@
 #include "sockets.hpp"
 #include "log.hpp"
 
-//#define DEBUG
 
 #ifdef DEBUG
     #define X_SIZE 20
     #define Y_SIZE 8
     #define N_COUNTERS 6
     #define N_WORDS_PIXEL 3
+
+    unsigned int n_frames = 0;
 
     unsigned int pixel_register[480];
     unsigned int chip_register[5];
