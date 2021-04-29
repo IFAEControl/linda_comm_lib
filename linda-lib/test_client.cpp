@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 
     rootMenu -> Insert(
             "reset_fb", [&](std::ostream& out) { 
-                ResetFrameBuffer();
+                ResetBuffer();
                 out << "done \n"; 
             },
             "Reset frame buffer" 

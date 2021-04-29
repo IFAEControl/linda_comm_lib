@@ -40,7 +40,7 @@ extern "C" DllExport int FullArrayDiscCharacF(const unsigned params[32], const u
 	long int size, unsigned *counts, int chips_bitmap);
 
 // Internal DLL functions for debugging purposes
-extern "C" DllExport void ResetFrameBuffer();
-extern "C" DllExport unsigned GetWriteFrame();
-extern "C" DllExport unsigned GetReadFrame();
+extern "C" DllExport void ResetBuffer();
+extern "C" DllExport unsigned GetWriteIdx();
+extern "C" DllExport unsigned GetReadIdx();
 

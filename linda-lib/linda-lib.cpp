@@ -356,14 +356,14 @@ int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], cons
 #endif
 }
 
-void ResetFrameBuffer() {
+void ResetBuffer() {
     fb.reset();
 }
 
-unsigned GetWriteFrame() {
+unsigned GetWriteIdx() {
     return fb.getWriteFrame();
 }
 
-unsigned GetReadFrame() {
+unsigned GetReadIdx() {
     return fb.getReadFrame();
 }
