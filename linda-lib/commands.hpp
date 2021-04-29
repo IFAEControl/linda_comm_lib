@@ -49,90 +49,99 @@ protected:
     Message m;
 };
 
-class Temperature : public Command {
+namespace CMD {
+
+class ReadTemperature : public Command {
 public:
-    Temperature(unsigned chips_bitmap);
+    ReadTemperature(unsigned chips_bitmap);
     unsigned getAnswer();
 };
 
-class HVSet : public Command {
+class SetHV : public Command {
 public:
-    HVSet(unsigned counts);
+    SetHV(unsigned counts);
 };
 
-class TPDACSet : public Command {
+class SetTPDAC : public Command {
 public:
-    TPDACSet(unsigned counts);
+    SetTPDAC(unsigned counts);
 };
 
-class WriteChipRegister : public Command {
+class ChipRegisterWrite : public Command {
 public:
-    WriteChipRegister(uint156_t& val, unsigned chips_bitmap);
+    ChipRegisterWrite(uint156_t& val, unsigned chips_bitmap);
 };
 
-class ReadChipRegister : public Command {
+class ChipRegisterRead : public Command {
 public:
-    ReadChipRegister(unsigned chips_bitmap);
+    ChipRegisterRead(unsigned chips_bitmap);
     uint156_t getAnswer();
 };
 
-class ReadFullArrayChipRegister : public Command {
+class FullArrayChipRegisterRead : public Command {
 public:
-    ReadFullArrayChipRegister(unsigned chips_bitmap);
+    FullArrayChipRegisterRead(unsigned chips_bitmap);
     LongInt<150> getAnswer();
 };
 
-class WritePixelRegister : public Command {
+class PixelRegisterWrite : public Command {
 public:
-    WritePixelRegister(uint15360_t& val, unsigned chips_bitmap);
+    PixelRegisterWrite(uint15360_t& val, unsigned chips_bitmap);
 };
 
-class ReadPixelRegister : public Command {
+class PixelRegisterRead : public Command {
 public:
-    ReadPixelRegister(unsigned chips_bitmap);
+    PixelRegisterRead(unsigned chips_bitmap);
     uint15360_t getAnswer();
 };
 
-class ReadFullArrayPixelRegister : public Command {
+class FullArrayPixelRegisterRead : public Command {
 public:
-    ReadFullArrayPixelRegister(unsigned chips_bitmap);
+    FullArrayPixelRegisterRead(unsigned chips_bitmap);
     LongInt<14400> getAnswer();
 };
 
-class ChipIDRead : public Command {
+class ReadEricaID : public Command {
 public:
-    ChipIDRead(unsigned chips_bitmap);
+    ReadEricaID(unsigned chips_bitmap);
     unsigned getAnswer();
 };
 
-class FullChipIDRead : public Command {
+class FullArrayReadEricaID : public Command {
 public:
-    FullChipIDRead(unsigned chips_bitmap);
+    FullArrayReadEricaID(unsigned chips_bitmap);
     LongInt<30> getAnswer();
 };
 
-class NonContAcq : public Command {
+class ACQuisition : public Command {
 public:
-    NonContAcq(const AcqInfo& info, unsigned frames, unsigned chips_bitmap);
+    ACQuisition(const AcqInfo& info, unsigned frames, unsigned chips_bitmap);
     LongInt<480> getAnswer();
 };
 
-class ContAcq : public Command {
+class ACQuisitionCont : public Command {
 public:
-    ContAcq(const AcqInfo& info, unsigned chips_bitmap);
+    ACQuisitionCont(const AcqInfo& info, unsigned chips_bitmap);
 };
 
-class StopAcq : public Command {
+class ACQuisitionStop : public Command {
 public:
-    StopAcq();
+    ACQuisitionStop();
 };
 
-class ResetCamera : public Command {
+class CameraReset : public Command {
 public:
-    ResetCamera();
+    CameraReset();
 };
 
-class ResetController : public Command {
+class ControllerReset : public Command {
 public:
-    ResetController();
+    ControllerReset();
 };
+
+class LoadFloodNormFactors : public Command {
+public:
+    LoadFloodNormFactors(LongInt<60>& val, unsigned chips_bitmap);
+};
+
+} // end namespace CMD

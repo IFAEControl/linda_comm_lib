@@ -11,6 +11,8 @@
 #include "sockets.hpp"
 #include "log.hpp"
 
+Networking n;
+
 
 #ifdef DEBUG
     #define X_SIZE 20
@@ -43,7 +45,7 @@
 
 template <typename T>
 std::pair<int, T> sendCmd(T& cmd) try {
-    auto resp = send_command(cmd);
+    auto resp = n.sendCommand(cmd);
     logger->debug(resp);
     return {0, resp};
 } catch(std::exception& e) {
@@ -61,15 +63,14 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
 #else
-    init_thread();
-    set_dest_ip(str);
-    set_ports(sync_port, async_port);
+    n.initReceiverThread();
+    n.configure(str, sync_port, async_port);
 #endif
     return 0;
 }
 
 void CloseCommunication() {
-    join_thread();
+    n.joinThread();
 }
 
 
@@ -81,7 +82,7 @@ int CameraReset(){
         pixel_register[i] = 0;
     return 0;
 #else
-    ResetCamera cmd;
+    CMD::CameraReset cmd;
     auto resp = sendCmd(cmd);
     return resp.first;
 #endif
@@ -91,14 +92,14 @@ int ControllerReset() {
 #ifdef DEBUG
     return 0;
 #else
-    ResetController cmd;
+    CMD::ControllerReset cmd;
     auto resp = sendCmd(cmd);
     return resp.first;
 #endif
 }
 
 
-int ReadTemperature(unsigned* temp, int chips_bitmap) {
+int ReadReadTemperature(unsigned* temp, int chips_bitmap) {
     if(!temp)
         return -1;
 
@@ -106,7 +107,7 @@ int ReadTemperature(unsigned* temp, int chips_bitmap) {
     *temp = 765;
     return 0;
 #else
-    Temperature cmd(chips_bitmap);
+    CMD::ReadTemperature cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
@@ -119,7 +120,7 @@ int SetHV(unsigned counts) {
 #ifdef DEBUG
     return 0;
 #else
-    HVSet cmd(counts);
+    CMD::SetHV cmd(counts);
     auto resp = sendCmd(cmd);
     return resp.first;
 #endif
@@ -129,8 +130,7 @@ int SetTPDAC(unsigned counts) {
 #ifdef DEBUG
     return 0;
 #else
-
-    TPDACSet cmd(counts);
+    CMD::SetTPDAC cmd(counts);
     auto resp = sendCmd(cmd);
     return resp.first;
 #endif
@@ -143,7 +143,7 @@ int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
     return 0;
 #else
     uint156_t chips_reg = in;
-    WriteChipRegister cmd(chips_reg, chips_bitmap);
+    CMD::ChipRegisterWrite cmd(chips_reg, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
 #endif
@@ -155,7 +155,7 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
         out[i] = chip_register[i];
     return 0;
 #else
-    ReadChipRegister cmd(chips_bitmap);
+    CMD::ChipRegisterRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
@@ -169,7 +169,7 @@ int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap) {
 #ifdef DEBUG
     return 0;
 #else
-    ReadFullArrayChipRegister cmd(chips_bitmap);
+    CMD::FullArrayChipRegisterRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
@@ -183,7 +183,7 @@ int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap){
 #ifdef DEBUG
     return 0;
 #else
-    ReadFullArrayPixelRegister cmd(chips_bitmap);
+    CMD::FullArrayPixelRegisterRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
@@ -199,9 +199,8 @@ int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
         pixel_register[i] = in[i];
     return 0;
 #else
-
     uint15360_t pixel_reg = in;
-    WritePixelRegister cmd(pixel_reg, chips_bitmap);
+    CMD::PixelRegisterWrite cmd(pixel_reg, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
 #endif
@@ -213,7 +212,7 @@ int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
         out[i] = pixel_register[i];
     return 0;
 #else
-    ReadPixelRegister cmd(chips_bitmap);
+    CMD::PixelRegisterRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
@@ -232,7 +231,7 @@ int ReadEricaID(unsigned *id, int chips_bitmap) {
     if(!id)
         return -1;
 
-    ChipIDRead cmd(chips_bitmap);
+    CMD::ReadEricaID cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
@@ -250,7 +249,7 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
     if (!id)
         return -1;
 
-    FullChipIDRead cmd(chips_bitmap);
+    CMD::FullArrayReadEricaID cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if (resp.first < 0) return resp.first;
 
@@ -260,7 +259,7 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
 #endif
 }
 
-int FullArrayReadTemperature(unsigned temp[30], int chips_bitmap) {
+int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
 #ifdef DEBUG
     return 0;
 #else
@@ -308,13 +307,13 @@ void CancelPopFrame() {
 
 
 int ACQuisitionCont(AcqInfo info, int chips_bitmap) {
-    ContAcq cmd(info, chips_bitmap);
+    CMD::ACQuisitionCont cmd(info, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
 }
 
 int ACQuisitionStop() {
-    StopAcq cmd;
+    CMD::ACQuisitionStop cmd;
     auto resp = sendCmd(cmd);
     return resp.first;
 }
@@ -324,25 +323,9 @@ int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap) {
     n_frames = frames;
     return 0;
 #else
-    NonContAcq cmd(info, frames, chips_bitmap);
+    CMD::ACQuisition cmd(info, frames, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
-#endif
-}
-
-int FullArrayACQuisitionTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DEBUG
-    return 0;
-#else
-    return 0;
-#endif
-}
-
-int FullArrayACQuisitionNonTDI(const unsigned params[5], unsigned* data, int chips_bitmap){
-#ifdef DEBUG
-    return 0;
-#else
-    return 0;
 #endif
 }
 
@@ -350,7 +333,10 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 #ifdef DEBUG
     return 0;
 #else
-    return 0;
+    LongInt<60> factors = in;
+    CMD::LoadFloodNormFactors cmd(factors, chips_bitmap);
+    auto resp = sendCmd(cmd);
+    return resp.first;
 #endif
 }
 
@@ -372,14 +358,17 @@ int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], cons
 #endif
 }
 
-void ResetFrameBuffer() {
+
+// Internal DLL functions for debugging purposes
+
+void ResetBuffer() {
     fb.reset();
 }
 
-unsigned GetWriteFrame() {
+unsigned GetWriteIdx() {
     return fb.getWriteFrame();
 }
 
-unsigned GetReadFrame() {
+unsigned GetReadIdx() {
     return fb.getReadFrame();
 }

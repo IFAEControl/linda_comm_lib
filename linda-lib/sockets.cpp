@@ -1,5 +1,4 @@
 #include <iostream>
-#include <thread>
 #include <sstream>
 #include <memory>
 #include <cstring>
@@ -12,34 +11,34 @@
 
 #include "sockets.hpp"
 
-using Poco::Net::IPAddress;
+#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V& c)
 
-static std::string ip = "8.8.8.8";
-unsigned port = 32000;
-unsigned async_port = 32001;
+using Poco::Net::IPAddress;
+using namespace CMD;
 
 FrameBuffer fb;
 
-static bool thread_running = false;
-std::thread reader{};
+void Networking::configure(std::string ip, unsigned port, unsigned aport) {
+    _ip = ip;
+    _port = port;
+    _async_port = aport;
+}
 
-void reader_thread();
 
-void init_thread() {
-    if(!thread_running) {
-        thread_running = true;
-        reader = std::thread(reader_thread);
+void Networking::initReceiverThread() {
+    if(!_thread_running) {
+        _thread_running = true;
+        _reader = std::thread(&Networking::readerThread, this);
     }
 }
 
-void join_thread() {
-    if(thread_running)
-        reader.join();
+void Networking::joinThread() {
+    if(_thread_running)
+        _reader.join();
 }
 
-
-void reader_thread() {
-    Poco::Net::SocketAddress sa(ip, async_port);
+void Networking::readerThread() {
+    Poco::Net::SocketAddress sa(_ip, _async_port);
     Poco::Net::StreamSocket dgs(sa);
     dgs.setBlocking(true);
 
@@ -54,20 +53,11 @@ void reader_thread() {
     } 
 }
 
-void set_dest_ip(const std::string& str) noexcept {
-    ip = str;
-}
-
-void set_ports(unsigned p, unsigned ap) noexcept {
-    port = p;
-    async_port = ap;
-}
-
 template<typename T>
-T send_command(T& c) {
+T Networking::sendCommand(T& c) {
     auto& m = c.getMessage();
 
-    Poco::Net::SocketAddress sa(ip, port);
+    Poco::Net::SocketAddress sa(_ip, _port);
     Poco::Net::StreamSocket socket(sa);
     socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
     Poco::Net::SocketStream str(socket);
@@ -76,23 +66,26 @@ T send_command(T& c) {
     std::stringstream ss;
     Poco::StreamCopier::copyStream(str, ss);
     std::memcpy(&m.header, ss.str().c_str(), HEADER_BYTE_SIZE);
+    if(m.header.packtype == HEADER_PACKTYPE::ERROR)
+        throw std::runtime_error("Command error");
     m.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
     return c;
 }
 
-template Temperature send_command<Temperature>(Temperature& c);
-template HVSet send_command<HVSet>(HVSet& c);
-template TPDACSet send_command<TPDACSet>(TPDACSet& c);
-template WriteChipRegister send_command<WriteChipRegister>(WriteChipRegister& c);
-template ReadChipRegister send_command<ReadChipRegister>(ReadChipRegister& c);
-template WritePixelRegister send_command<WritePixelRegister>(WritePixelRegister& c);
-template ReadPixelRegister send_command<ReadPixelRegister>(ReadPixelRegister& c);
-template ChipIDRead send_command<ChipIDRead>(ChipIDRead& c);
-template FullChipIDRead send_command<FullChipIDRead>(FullChipIDRead& c);
-template ReadFullArrayChipRegister send_command<ReadFullArrayChipRegister>(ReadFullArrayChipRegister& c);
-template ReadFullArrayPixelRegister send_command<ReadFullArrayPixelRegister>(ReadFullArrayPixelRegister& c);
-template NonContAcq send_command<NonContAcq>(NonContAcq& c);
-template ContAcq send_command<ContAcq>(ContAcq& c);
-template StopAcq send_command<StopAcq>(StopAcq& c);
-template ResetCamera send_command<ResetCamera>(ResetCamera& c);
-template ResetController send_command<ResetController>(ResetController& c); 
+TEMPLATE_COMMAND(ReadTemperature);
+TEMPLATE_COMMAND(SetHV);
+TEMPLATE_COMMAND(SetTPDAC);
+TEMPLATE_COMMAND(ChipRegisterWrite);
+TEMPLATE_COMMAND(ChipRegisterRead);
+TEMPLATE_COMMAND(PixelRegisterWrite);
+TEMPLATE_COMMAND(PixelRegisterRead);
+TEMPLATE_COMMAND(ReadEricaID);
+TEMPLATE_COMMAND(FullArrayReadEricaID);
+TEMPLATE_COMMAND(FullArrayChipRegisterRead);
+TEMPLATE_COMMAND(FullArrayPixelRegisterRead);
+TEMPLATE_COMMAND(ACQuisition);
+TEMPLATE_COMMAND(ACQuisitionCont);
+TEMPLATE_COMMAND(ACQuisitionStop);
+TEMPLATE_COMMAND(CameraReset);
+TEMPLATE_COMMAND(ControllerReset);
+TEMPLATE_COMMAND(LoadFloodNormFactors);

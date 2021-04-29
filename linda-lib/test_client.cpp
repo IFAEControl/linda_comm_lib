@@ -101,8 +101,8 @@ int main(int argc, char* argv[]) {
     rootMenu -> Insert(
             "read_temp", [&](std::ostream& out, int chip) { 
                 unsigned temp;
-                ReadTemperature(&temp, 1<<chip);
-                out << "Temperature: " << temp << "\n"; 
+                ReadReadTemperature(&temp, 1<<chip);
+                out << "ReadTemperature: " << temp << "\n"; 
         },
             "Read temperature" 
     );
@@ -141,10 +141,17 @@ int main(int argc, char* argv[]) {
 
     rootMenu -> Insert(
             "reset_fb", [&](std::ostream& out) { 
-                ResetFrameBuffer();
+                ResetBuffer();
                 out << "done \n"; 
             },
             "Reset frame buffer" 
+    );
+
+    rootMenu -> Insert(
+            "load_factors", [&](std::ostream& out) {
+                LoadFloodNormFactors(data, 5);
+            },
+            "Load norm factors"
     );
 
 
@@ -152,4 +159,6 @@ int main(int argc, char* argv[]) {
     CliFileSession input(cli);
     SetColor();
     input.Start();
+
+    CloseCommunication();
 }
