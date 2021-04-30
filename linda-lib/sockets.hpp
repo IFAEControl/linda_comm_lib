@@ -23,6 +23,21 @@ private:
 	Poco::Net::StreamSocket _socket;
 };
 
+class DataReceiver {
+public:
+	DataReceiver() =default;
+	DataReceiver(const std::string& ip, unsigned short port);
+	void initThread();
+	void joinThread();
+private:
+	void readerThread();
+
+	bool _thread_running{false};
+	std::thread _reader{};
+
+	Poco::Net::SocketAddress _sa;
+};
+
 class Networking {
 public:
 	void configure(std::string ip, unsigned short port, unsigned short aport);
@@ -30,13 +45,7 @@ public:
 	void initReceiverThread();
 	void joinThread();
 private:
-	void readerThread();
-
 	std::string _ip{"8.8.8.8"};
-	unsigned short _port{32000}; 
-	unsigned short _async_port{32001};
-	bool _thread_running{false};
-	std::thread _reader{};
-
 	CmdSender _cmd_sender;
+	DataReceiver _data_receiver;
 };
