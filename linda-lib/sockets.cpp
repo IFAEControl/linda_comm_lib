@@ -4,8 +4,6 @@
 #include <cstring>
 
 #include <Poco/Net/DatagramSocket.h>
-#include <Poco/Net/SocketAddress.h>
-#include <Poco/Net/StreamSocket.h>
 #include <Poco/Net/SocketStream.h>
 #include <Poco/StreamCopier.h>
 
@@ -18,10 +16,33 @@ using namespace CMD;
 
 FrameBuffer fb;
 
-void Networking::configure(std::string ip, unsigned port, unsigned aport) {
+CmdSender::CmdSender(const std::string& ip, unsigned short p) :
+    _sa{ip, p}
+{}
+
+template<typename T>
+T CmdSender::sendCommand(T& c) {
+    auto& m = c.getMessage();
+    Poco::Net::StreamSocket _socket(_sa);
+    _socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
+    Poco::Net::SocketStream str(_socket);
+    str << m.body;
+    str.flush();
+    std::stringstream ss;
+    Poco::StreamCopier::copyStream(str, ss);
+    std::memcpy(&m.header, ss.str().c_str(), HEADER_BYTE_SIZE);
+    if(m.header.packtype == HEADER_PACKTYPE::ERROR)
+        throw std::runtime_error("Command error");
+    m.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
+    return std::move(c);
+}
+
+
+void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
     _ip = ip;
     _port = port;
     _async_port = aport;
+    _cmd_sender = CmdSender(_ip, _port);
 }
 
 
@@ -42,7 +63,7 @@ void Networking::readerThread() {
     Poco::Net::StreamSocket dgs(sa);
     dgs.setBlocking(true);
 
-    for (;;) {
+    while(_thread_running) {
         unsigned bytes = 0;    
         // first read how many bytes to read
         dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
@@ -55,21 +76,7 @@ void Networking::readerThread() {
 
 template<typename T>
 T Networking::sendCommand(T& c) {
-    auto& m = c.getMessage();
-
-    Poco::Net::SocketAddress sa(_ip, _port);
-    Poco::Net::StreamSocket socket(sa);
-    socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
-    Poco::Net::SocketStream str(socket);
-    str << m.body;
-    str.flush();
-    std::stringstream ss;
-    Poco::StreamCopier::copyStream(str, ss);
-    std::memcpy(&m.header, ss.str().c_str(), HEADER_BYTE_SIZE);
-    if(m.header.packtype == HEADER_PACKTYPE::ERROR)
-        throw std::runtime_error("Command error");
-    m.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
-    return c;
+    return std::move(_cmd_sender.sendCommand(c));
 }
 
 TEMPLATE_COMMAND(ReadTemperature);
