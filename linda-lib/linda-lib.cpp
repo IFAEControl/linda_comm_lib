@@ -47,7 +47,7 @@ template <typename T>
 std::pair<int, T> sendCmd(T& cmd) try {
     auto resp = n.sendCommand(cmd);
     logger->debug(resp);
-    return {0, resp};
+    return {0, std::move(resp)};
 } catch(std::exception& e) {
     logger->critical(e.what());
     return {-1, cmd};
