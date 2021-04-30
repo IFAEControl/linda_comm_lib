@@ -9,7 +9,7 @@
 
 #include "sockets.hpp"
 
-#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V& c)
+#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V&& c)
 
 using Poco::Net::IPAddress;
 using namespace CMD;
@@ -21,7 +21,7 @@ CmdSender::CmdSender(const std::string& ip, unsigned short p) :
 {}
 
 template<typename T>
-T CmdSender::sendCommand(T& c) {
+T CmdSender::sendCommand(T&& c) {
     auto& m = c.getMessage();
     _socket.connect(_sa);
     _socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
@@ -38,30 +38,20 @@ T CmdSender::sendCommand(T& c) {
     return std::move(c);
 }
 
+DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
+    _sa{ip, p}
+{}
 
-void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
-    _ip = ip;
-    _port = port;
-    _async_port = aport;
-    _cmd_sender = CmdSender(_ip, _port);
-}
-
-
-void Networking::initReceiverThread() {
+void DataReceiver::initThread() {
     if(!_thread_running) {
         _thread_running = true;
-        _reader = std::thread(&Networking::readerThread, this);
+        _reader = std::thread(&DataReceiver::readerThread, this);
     }
 }
 
-void Networking::joinThread() {
-    if(_thread_running)
-        _reader.join();
-}
 
-void Networking::readerThread() {
-    Poco::Net::SocketAddress sa(_ip, _async_port);
-    Poco::Net::StreamSocket dgs(sa);
+void DataReceiver::readerThread() {
+    Poco::Net::StreamSocket dgs(_sa);
     dgs.setBlocking(true);
 
     while(_thread_running) {
@@ -75,9 +65,29 @@ void Networking::readerThread() {
     } 
 }
 
+void DataReceiver::joinThread() {
+    if(_thread_running)
+        _reader.join();
+}
+
+void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
+    _ip = ip;
+    _cmd_sender = CmdSender(_ip, port);
+    _data_receiver = DataReceiver(_ip, aport);
+}
+
+
+void Networking::initReceiverThread() {
+    _data_receiver.initThread();
+}
+
+void Networking::joinThread() {
+    _data_receiver.joinThread();
+}
+
 template<typename T>
-T Networking::sendCommand(T& c) {
-    return std::move(_cmd_sender.sendCommand(c));
+T Networking::sendCommand(T&& c) {
+    return std::move(_cmd_sender.sendCommand(std::move(c)));
 }
 
 TEMPLATE_COMMAND(ReadTemperature);

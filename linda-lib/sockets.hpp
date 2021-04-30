@@ -17,26 +17,35 @@ class CmdSender {
 public:
 	CmdSender() =default;
 	CmdSender(const std::string& ip, unsigned short p);
-	template<typename T> T sendCommand(T& c);
+	template<typename T> T sendCommand(T&& c);
 private:
 	Poco::Net::SocketAddress _sa;
 	Poco::Net::StreamSocket _socket;
 };
 
-class Networking {
+class DataReceiver {
 public:
-	void configure(std::string ip, unsigned short port, unsigned short aport);
-	template<typename T> T sendCommand(T& c);
-	void initReceiverThread();
+	DataReceiver() =default;
+	DataReceiver(const std::string& ip, unsigned short port);
+	void initThread();
 	void joinThread();
 private:
 	void readerThread();
 
-	std::string _ip{"8.8.8.8"};
-	unsigned short _port{32000}; 
-	unsigned short _async_port{32001};
 	bool _thread_running{false};
 	std::thread _reader{};
 
+	Poco::Net::SocketAddress _sa;
+};
+
+class Networking {
+public:
+	void configure(std::string ip, unsigned short port, unsigned short aport);
+	template<typename T> T sendCommand(T&& c);
+	void initReceiverThread();
+	void joinThread();
+private:
+	std::string _ip{"8.8.8.8"};
 	CmdSender _cmd_sender;
+	DataReceiver _data_receiver;
 };

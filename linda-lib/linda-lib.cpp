@@ -2,6 +2,7 @@
 #include <array>
 #include <algorithm>
 #include <utility>
+#include <optional>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -13,8 +14,7 @@
 
 Networking n;
 
-
-#ifdef DEBUG
+#ifdef DUMMY
     #define X_SIZE 20
     #define Y_SIZE 8
     #define N_COUNTERS 6
@@ -44,27 +44,27 @@ Networking n;
 #endif
 
 template <typename T>
-std::pair<int, T> sendCmd(T& cmd) try {
-    auto resp = n.sendCommand(cmd);
+std::pair<int, std::optional<T>> sendCmd(T& cmd) try {
+    auto resp = n.sendCommand(std::move(cmd));
     logger->debug(resp);
     return {0, std::move(resp)};
 } catch(std::exception& e) {
     logger->critical(e.what());
-    return {-1, cmd};
+    return {-1, {}};
 } catch(...) {
     logger->critical("Unknown error");
-    return {-2, cmd};
+    return {-2, {}};
 }
 
 int InitCommunication(const char* str, int sync_port, int async_port) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
 #else
-    n.initReceiverThread();
     n.configure(str, sync_port, async_port);
+    n.initReceiverThread();
 #endif
     return 0;
 }
@@ -75,7 +75,7 @@ void CloseCommunication() {
 
 
 int CameraReset(){
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
@@ -89,7 +89,7 @@ int CameraReset(){
 }
 
 int ControllerReset() {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     CMD::ControllerReset cmd;
@@ -103,7 +103,7 @@ int ReadReadTemperature(unsigned* temp, int chips_bitmap) {
     if(!temp)
         return -1;
 
-#ifdef DEBUG
+#ifdef DUMMY
     *temp = 765;
     return 0;
 #else
@@ -111,13 +111,13 @@ int ReadReadTemperature(unsigned* temp, int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    *temp = resp.second.getAnswer();
+    *temp = resp.second.value().getAnswer();
     return resp.first;
 #endif
 }
 
 int SetHV(unsigned counts) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     CMD::SetHV cmd(counts);
@@ -127,7 +127,7 @@ int SetHV(unsigned counts) {
 }
 
 int SetTPDAC(unsigned counts) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     CMD::SetTPDAC cmd(counts);
@@ -137,7 +137,7 @@ int SetTPDAC(unsigned counts) {
 }
 
 int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = in[i];
     return 0;
@@ -150,7 +150,7 @@ int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
 }
  
 int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<5; i++)
         out[i] = chip_register[i];
     return 0;
@@ -159,42 +159,42 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
 }
 
 int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     CMD::FullArrayChipRegisterRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
 }
 
 int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap){
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     CMD::FullArrayPixelRegisterRead cmd(chips_bitmap);
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
     }
 
 int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<480; i++)
         pixel_register[i] = in[i];
     return 0;
@@ -207,7 +207,7 @@ int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
 }
 
 int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (int i=0; i<480; i++)
         out[i] = pixel_register[i];
     return 0;
@@ -216,14 +216,14 @@ int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
 }
 
 int ReadEricaID(unsigned *id, int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     int enabled_chip = enabled_Chip_Founder(chips_bitmap);
     *id = chips_ids[enabled_chip];
     return 0;
@@ -235,13 +235,13 @@ int ReadEricaID(unsigned *id, int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    *id = resp.second.getAnswer();
+    *id = resp.second.value().getAnswer();
     return resp.first;
 #endif
 }
 
 int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     int enabled_chip = enabled_Chip_Founder(chips_bitmap); 
     *id = chips_ids[enabled_chip];
     return 0;
@@ -253,14 +253,14 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if (resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), id);
     return resp.first;
 #endif
 }
 
 int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     return 0;
@@ -268,7 +268,7 @@ int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
 }
 
 int PopFrame(unsigned* data) {
-#ifdef DEBUG
+#ifdef DUMMY
         for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
             for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
                 data[(i * N_WORDS_PIXEL) + k] = i + (i << 16);
@@ -281,7 +281,7 @@ int PopFrame(unsigned* data) {
 }
 
 int PopFrames(unsigned* data, unsigned frames) {
-#ifdef DEBUG
+#ifdef DUMMY
     for (uint32_t j = 0; j < frames; j++) {
         for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
             for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
@@ -319,7 +319,7 @@ int ACQuisitionStop() {
 }
 
 int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     n_frames = frames;
     return 0;
 #else
@@ -330,7 +330,7 @@ int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap) {
 }
 
 int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     LongInt<60> factors = in;
@@ -342,7 +342,7 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 
 int DiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[480],
     long int size, unsigned* counts, int chips_bitmap) {
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     return 0;
@@ -351,7 +351,7 @@ int DiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigne
 
 int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[14400],
     long int size, unsigned* counts, int chips_bitmap){
-#ifdef DEBUG
+#ifdef DUMMY
     return 0;
 #else
     return 0;

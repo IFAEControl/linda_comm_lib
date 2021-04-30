@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 
+project(linda-lib CXX)
+
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
-project(linda-lib CXX)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Og -ggdb -DDEBUG")
 
 ################################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
