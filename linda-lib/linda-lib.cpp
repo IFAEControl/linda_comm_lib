@@ -2,6 +2,7 @@
 #include <array>
 #include <algorithm>
 #include <utility>
+#include <optional>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -41,16 +42,16 @@ Networking n;
 #endif
 
 template <typename T>
-std::pair<int, T> sendCmd(T& cmd) try {
-    auto resp = n.sendCommand(cmd);
+std::pair<int, std::optional<T>> sendCmd(T& cmd) try {
+    auto resp = n.sendCommand(std::move(cmd));
     logger->debug(resp);
     return {0, std::move(resp)};
 } catch(std::exception& e) {
     logger->critical(e.what());
-    return {-1, cmd};
+    return {-1, {}};
 } catch(...) {
     logger->critical("Unknown error");
-    return {-2, cmd};
+    return {-2, {}};
 }
 
 int InitCommunication(const char* str, int sync_port, int async_port) {
@@ -108,7 +109,7 @@ int ReadReadTemperature(unsigned* temp, int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    *temp = resp.second.getAnswer();
+    *temp = resp.second.value().getAnswer();
     return resp.first;
 #endif
 }
@@ -156,7 +157,7 @@ int ChipRegisterRead(unsigned out[5], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
@@ -170,7 +171,7 @@ int FullArrayChipRegisterRead(unsigned out[150], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
@@ -184,7 +185,7 @@ int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap){
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
@@ -213,7 +214,7 @@ int PixelRegisterRead(unsigned out[480], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), out);
     return resp.first;
 #endif
@@ -232,7 +233,7 @@ int ReadEricaID(unsigned *id, int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if(resp.first < 0) return resp.first;
 
-    *id = resp.second.getAnswer();
+    *id = resp.second.value().getAnswer();
     return resp.first;
 #endif
 }
@@ -250,7 +251,7 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
     auto resp = sendCmd(cmd);
     if (resp.first < 0) return resp.first;
 
-    auto out_arr = resp.second.getAnswer();
+    auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), id);
     return resp.first;
 #endif

@@ -9,7 +9,7 @@
 
 #include "sockets.hpp"
 
-#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V& c)
+#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V&& c)
 
 using Poco::Net::IPAddress;
 using namespace CMD;
@@ -21,7 +21,7 @@ CmdSender::CmdSender(const std::string& ip, unsigned short p) :
 {}
 
 template<typename T>
-T CmdSender::sendCommand(T& c) {
+T CmdSender::sendCommand(T&& c) {
     auto& m = c.getMessage();
     _socket.connect(_sa);
     _socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
@@ -86,8 +86,8 @@ void Networking::joinThread() {
 }
 
 template<typename T>
-T Networking::sendCommand(T& c) {
-    return std::move(_cmd_sender.sendCommand(c));
+T Networking::sendCommand(T&& c) {
+    return std::move(_cmd_sender.sendCommand(std::move(c)));
 }
 
 TEMPLATE_COMMAND(ReadTemperature);
