@@ -23,7 +23,7 @@ CmdSender::CmdSender(const std::string& ip, unsigned short p) :
 template<typename T>
 T CmdSender::sendCommand(T& c) {
     auto& m = c.getMessage();
-    Poco::Net::StreamSocket _socket(_sa);
+    _socket.connect(_sa);
     _socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
     Poco::Net::SocketStream str(_socket);
     str << m.body;
@@ -34,6 +34,7 @@ T CmdSender::sendCommand(T& c) {
     if(m.header.packtype == HEADER_PACKTYPE::ERROR)
         throw std::runtime_error("Command error");
     m.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
+    _socket.close();
     return std::move(c);
 }
 

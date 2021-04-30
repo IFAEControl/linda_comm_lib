@@ -20,6 +20,7 @@ public:
 	template<typename T> T sendCommand(T& c);
 private:
 	Poco::Net::SocketAddress _sa;
+	Poco::Net::StreamSocket _socket;
 };
 
 class Networking {
