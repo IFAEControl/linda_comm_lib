@@ -8,7 +8,7 @@
 #undef ERROR
 #endif
 
-constexpr uint8_t HEADER_BYTE_SIZE = 32;
+constexpr uint8_t HEADER_BYTE_SIZE = 8;
 
 enum class HEADER_PACKTYPE : uint8_t {
     COMMAND = 1,
@@ -31,10 +31,8 @@ struct BaseHeaderType {
      *
      */
     HEADER_PACKTYPE packtype;
-    uint8_t data_rate;
-    uint8_t reserved[2];
+    uint8_t reserved[3];
     uint32_t packetsize;
-    uint8_t fill[24];
 };
 
 struct AcqInfo {
