@@ -8,6 +8,7 @@
 #include <Poco/StreamCopier.h>
 
 #include "sockets.hpp"
+#include "log.hpp"
 
 #define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V&& c)
 
@@ -55,7 +56,17 @@ void DataReceiver::readerThread() {
     dgs.setBlocking(true);
 
     while(_thread_running) {
-        unsigned bytes = 0;    
+        unsigned bytes = 0;  
+        HEADER_PACKTYPE type;
+
+        dgs.receiveBytes(&type, sizeof(type), MSG_WAITALL);
+        if(type == HEADER_PACKTYPE::ERROR) {
+            logger->error("Error on asyncs");
+            dgs.close();
+            dgs.connect(_sa);
+            continue;
+        }
+
         // first read how many bytes to read
         dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
 
