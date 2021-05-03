@@ -12,9 +12,7 @@ constexpr uint8_t HEADER_BYTE_SIZE = 8;
 
 enum class HEADER_PACKTYPE : uint8_t {
     COMMAND = 1,
-    ASYNC_START_CDA,
-    ASYNC_STOP_CDA,
-    ASYNC_CDA_DATA,
+    ASYNC_DATA,
     ERROR = 10,
 };
 
