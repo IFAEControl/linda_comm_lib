@@ -46,7 +46,7 @@ Networking n;
 template <typename T>
 std::pair<int, std::optional<T>> sendCmd(T& cmd) try {
     auto resp = n.sendCommand(std::move(cmd));
-    logger->debug(resp);
+    logger->trace(resp);
     return {0, std::move(resp)};
 } catch(std::exception& e) {
     logger->critical(e.what());
@@ -63,6 +63,7 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
 #else
+    logger->info("Connecting");
     n.configure(str, sync_port, async_port);
     n.initReceiverThread();
 #endif

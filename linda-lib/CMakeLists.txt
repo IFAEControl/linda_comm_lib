@@ -20,12 +20,7 @@ set(ALL_FILES
 add_library(${PROJECT_NAME}-temp STATIC ${ALL_FILES})
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
 
-# Fix for windows
-include(GenerateExportHeader)
-generate_export_header(${PROJECT_NAME})
-
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-temp ${CONAN_LIBS})
-
 
 if(BUILD_CLIENT)
     add_executable(test_client "test_client.cpp")

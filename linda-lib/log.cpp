@@ -20,7 +20,7 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
 
     sinks.emplace_back(
         std::make_shared<spsinks::basic_file_sink_mt>(tmp_dir + "linda.log", false));
-    sinks.back()->set_level(spdlog::level::trace);
+    sinks.back()->set_level(spdlog::level::debug);
 
     return sinks;
 }
@@ -34,11 +34,11 @@ spdlogger NewLogger(const std::string& name) {
     auto sinks = CreateLogSinks();
     auto logger = std::make_shared<spdlog::logger>(name, begin(sinks), end(sinks));
     spdlog::register_logger(logger);
-    logger->set_level(spdlog::level::trace);
+    logger->set_level(spdlog::level::debug);
 
     // XXX: Flush level should be warning but then the order
     // of messages is not preserved
-    logger->flush_on(spdlog::level::trace);
+    logger->flush_on(spdlog::level::debug);
 
     return logger;
 }
