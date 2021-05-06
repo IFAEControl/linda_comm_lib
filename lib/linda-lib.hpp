@@ -36,10 +36,6 @@ DllExport int ACQuisitionStop();
 DllExport int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap);
 DllExport int SetHV(unsigned counts);
 DllExport int SetTPDAC(unsigned counts);
-DllExport int DiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[480],
-	long int size, unsigned *counts, int chips_bitmap);
-DllExport int FullArrayDiscCharacF(const unsigned params[32], const unsigned reg[20], const unsigned px_reg[14400],
-	long int size, unsigned *counts, int chips_bitmap);
 
 // Internal DLL functions for debugging purposes
 DllExport void ResetBuffer();
