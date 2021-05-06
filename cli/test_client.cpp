@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 
     rootMenu -> Insert(
             "pop_frame", [&](std::ostream& out) {
-                PopFrame(data);
+                PopData(data);
                 for(int i = 0; i < 10; i++)
                     out << data[i];
                 out << "\ndone\n"; 

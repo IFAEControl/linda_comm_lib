@@ -268,7 +268,7 @@ int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
 #endif
 }
 
-int PopFrame(unsigned* data) {
+int PopData(unsigned* data) {
 #ifdef DUMMY
         for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
             for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {

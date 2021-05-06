@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     while(++counter) {
         logger->debug("Acq {}", counter);
         ACQuisition(info, 1, 1);
-        PopFrame(data);
+        PopData(data);
         logger->debug("Done. Read: {}, Write: {}", GetReadIdx(), GetWriteIdx());
     }
 }
