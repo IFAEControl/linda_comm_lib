@@ -26,14 +26,6 @@ if(NOT ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"
     message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
 endif()
 
-################################################################################
-# Global configuration types
-################################################################################
-set(CMAKE_CONFIGURATION_TYPES
-    "Debug"
-    "Release"
-    CACHE STRING "" FORCE
-)
 
 if(MSVC)
     include_directories("C:/Program Files (x86)/cli/include/")
@@ -48,9 +40,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Sub-projects
 add_subdirectory(lib)
 
-if(BUILD_CLIENT)
-    include_directories("lib")
+#if(BUILD_CLIENT)
+   include_directories("lib")
     add_subdirectory(cli)
-endif()
+#endif()
 
 

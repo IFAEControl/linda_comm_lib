@@ -100,7 +100,7 @@ int ControllerReset() {
 }
 
 
-int ReadReadTemperature(unsigned* temp, int chips_bitmap) {
+int ReadTemperature(unsigned* temp, int chips_bitmap) {
     if(!temp)
         return -1;
 

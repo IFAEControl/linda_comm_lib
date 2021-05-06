@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
     rootMenu -> Insert(
             "read_temp", [&](std::ostream& out, int chip) { 
                 unsigned temp;
-                ReadReadTemperature(&temp, 1<<chip);
+                ReadTemperature(&temp, 1<<chip);
                 out << "ReadTemperature: " << temp << "\n"; 
         },
             "Read temperature" 
