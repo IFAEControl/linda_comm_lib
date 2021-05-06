@@ -12,10 +12,10 @@ int main(int argc, char* argv[]) {
     InitCommunication(ip.c_str(), 32000, 32001);
 
     std::size_t counter = 0;
-
+    
+    AcqInfo info{1000,1,2500,false,true,false};
     while(++counter) {
         logger->debug("Acq {}", counter);
-        AcqInfo info{1000,4,2500,false,true,false};
         ACQuisition(info, 1, 1);
         PopFrame(data);
         logger->debug("Done. Read: {}, Write: {}", GetReadIdx(), GetWriteIdx());
