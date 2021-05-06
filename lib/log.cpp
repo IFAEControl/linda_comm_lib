@@ -10,9 +10,9 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
 
     std::vector<spdlog::sink_ptr> sinks;
 
-    //auto s = std::make_shared<spsinks::stdout_color_sink_mt>();
-    //sinks.emplace_back(s);
-    //sinks.back()->set_level(spdlog::level::info);
+    auto s = std::make_shared<spsinks::stdout_color_sink_mt>();
+    sinks.emplace_back(s);
+    sinks.back()->set_level(spdlog::level::info);
 
 #ifdef _WIN32
     std::filesystem::path tmp_dir = "C:\\Windows\\Temp\\";
@@ -24,7 +24,7 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
     std::filesystem::remove(fname);
 
     sinks.emplace_back(
-        std::make_shared<spsinks::basic_file_sink_mt>(fname, false));
+        std::make_shared<spsinks::basic_file_sink_mt>(fname.string(), false));
     sinks.back()->set_level(spdlog::level::debug);
 
     return sinks;

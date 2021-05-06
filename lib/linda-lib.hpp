@@ -22,7 +22,7 @@ DllExport int PixelRegisterRead(unsigned out[480], int chips_bitmap);
 DllExport int FullArrayPixelRegisterRead(unsigned out[14400], int chips_bitmap);
 DllExport int ReadEricaID(unsigned *id, int chips_bitmap);
 DllExport int FullArrayReadEricaID(unsigned id[30], int chips_bitmap);
-DllExport int ReadReadTemperature(unsigned *temp, int chips_bitmap);
+DllExport int ReadTemperature(unsigned *temp, int chips_bitmap);
 DllExport int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap);
 DllExport int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap);
 DllExport int ACQuisitionCont(AcqInfo info, int chips_bitmap);
