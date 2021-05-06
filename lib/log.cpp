@@ -24,7 +24,7 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
     std::filesystem::remove(fname);
 
     sinks.emplace_back(
-        std::make_shared<spsinks::basic_file_sink_mt>(fname, false));
+        std::make_shared<spsinks::basic_file_sink_mt>(fname.string(), false));
     sinks.back()->set_level(spdlog::level::debug);
 
     return sinks;
