@@ -40,9 +40,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Sub-projects
 add_subdirectory(lib)
 
-#if(BUILD_CLIENT)
+if(BUILD_CLIENT)
    include_directories("lib")
     add_subdirectory(cli)
-#endif()
+endif()
 
 
