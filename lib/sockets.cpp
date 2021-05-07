@@ -56,20 +56,17 @@ void DataReceiver::readerThread() {
     dgs.setBlocking(true);
 
     while(_thread_running) {
-        unsigned bytes = 0;  
-        HEADER_PACKTYPE type;
+        BaseHeaderType type;
 
-        dgs.receiveBytes(&type, sizeof(type), MSG_WAITALL);
-        if(type == HEADER_PACKTYPE::ERROR) {
+        dgs.receiveBytes(&type.packtype, sizeof(type), MSG_WAITALL);
+        if(type.packtype == HEADER_PACKTYPE::ERROR) {
             logger->error("Error on asyncs");
             dgs.close();
             dgs.connect(_sa);
             continue;
         }
 
-        // first read how many bytes to read
-        dgs.receiveBytes(&bytes, sizeof(bytes), MSG_WAITALL);
-
+        auto bytes = type.packetsize;
         Frame f(bytes);
         int n = dgs.receiveBytes(f.get(), bytes, MSG_WAITALL);
         fb.addFrame(std::move(f));
