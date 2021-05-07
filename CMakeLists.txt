@@ -47,7 +47,7 @@ if(COMPILE_TESTS)
 
 	FetchContent_MakeAvailable(Catch2)
 
-  find_package(Catch2 REQUIRED)
+  #find_package(Catch2 REQUIRED)
 endif()
 
 # Use solution folders feature
