@@ -30,7 +30,7 @@ endif()
 
 
 if(MSVC)
-    include_directories("C:/Program Files (x86)/cli/include/")
+	include_directories("C:/Program Files (x86)/cli/include/")
 endif()
 
 include(CTest)
@@ -38,6 +38,15 @@ include(CMake/Utils.cmake)
 include(CMake/Conan.cmake)
 
 if(COMPILE_TESTS)
+	Include(FetchContent)
+
+	FetchContent_Declare(
+  		Catch2
+  		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  		GIT_TAG        v2.13.1)
+
+	FetchContent_MakeAvailable(Catch2)
+
   find_package(Catch2 REQUIRED)
 endif()
 
