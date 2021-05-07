@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 project(linda-lib CXX)
 
 option(BUILD_CLIENT "Build client" OFF)
+option(COMPILE_TESTS "Compile tests" ON)
+
 
 set(PROJECT_NAME linda-lib)
 
@@ -31,8 +33,13 @@ if(MSVC)
     include_directories("C:/Program Files (x86)/cli/include/")
 endif()
 
+include(CTest)
 include(CMake/Utils.cmake)
 include(CMake/Conan.cmake)
+
+if(COMPILE_TESTS)
+  find_package(Catch2 REQUIRED)
+endif()
 
 # Use solution folders feature
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -42,7 +49,7 @@ add_subdirectory(lib)
 
 if(BUILD_CLIENT)
    include_directories("lib")
-    add_subdirectory(cli)
+   add_subdirectory(cli)
 endif()
 
 
