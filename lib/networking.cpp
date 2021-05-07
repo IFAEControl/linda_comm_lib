@@ -7,7 +7,7 @@
 #include <Poco/Net/SocketStream.h>
 #include <Poco/StreamCopier.h>
 
-#include "sockets.hpp"
+#include "networking.hpp"
 #include "log.hpp"
 
 #define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V&& c)

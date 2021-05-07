@@ -9,7 +9,7 @@
 
 #include "linda-lib.hpp"
 #include "commands.hpp"
-#include "sockets.hpp"
+#include "networking.hpp"
 #include "log.hpp"
 
 Networking n;
