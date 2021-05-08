@@ -42,7 +42,7 @@ add_subdirectory(lib)
 
 if(BUILD_CLIENT)
    include_directories("lib")
-    add_subdirectory(cli)
+   add_subdirectory(cli)
 endif()
 
 

@@ -10,14 +10,14 @@
 using json = nlohmann::json;
 
 template<std::size_t S>
-class LongInt {
+class UnsignedArray {
 public:
-    LongInt(const unsigned* in) {
+    UnsignedArray(const unsigned* in) {
         for(std::size_t i = 0; i < S; i++) a[i] = in[i];
     }
     
     template<typename T>
-    LongInt(T& json) {
+    UnsignedArray(T& json) {
         a = json;
     }
 
@@ -28,9 +28,6 @@ public:
 
     std::array<unsigned,S> a;
 };
-
-using uint156_t = LongInt<5>;
-using uint15360_t = LongInt<480>;
 
 struct Message {
     BaseHeaderType header{};
@@ -69,36 +66,36 @@ public:
 
 class ChipRegisterWrite : public Command {
 public:
-    ChipRegisterWrite(uint156_t& val, unsigned chips_bitmap);
+    ChipRegisterWrite(UnsignedArray<5>& val, unsigned chips_bitmap);
 };
 
 class ChipRegisterRead : public Command {
 public:
     ChipRegisterRead(unsigned chips_bitmap);
-    uint156_t getAnswer();
+    UnsignedArray<5> getAnswer();
 };
 
 class FullArrayChipRegisterRead : public Command {
 public:
     FullArrayChipRegisterRead(unsigned chips_bitmap);
-    LongInt<150> getAnswer();
+    UnsignedArray<150> getAnswer();
 };
 
 class PixelRegisterWrite : public Command {
 public:
-    PixelRegisterWrite(uint15360_t& val, unsigned chips_bitmap);
+    PixelRegisterWrite(UnsignedArray<480>& val, unsigned chips_bitmap);
 };
 
 class PixelRegisterRead : public Command {
 public:
     PixelRegisterRead(unsigned chips_bitmap);
-    uint15360_t getAnswer();
+    UnsignedArray<480> getAnswer();
 };
 
 class FullArrayPixelRegisterRead : public Command {
 public:
     FullArrayPixelRegisterRead(unsigned chips_bitmap);
-    LongInt<14400> getAnswer();
+    UnsignedArray<14400> getAnswer();
 };
 
 class ReadEricaID : public Command {
@@ -110,13 +107,13 @@ public:
 class FullArrayReadEricaID : public Command {
 public:
     FullArrayReadEricaID(unsigned chips_bitmap);
-    LongInt<30> getAnswer();
+    UnsignedArray<30> getAnswer();
 };
 
 class ACQuisition : public Command {
 public:
     ACQuisition(const AcqInfo& info, unsigned frames, unsigned chips_bitmap);
-    LongInt<480> getAnswer();
+    UnsignedArray<480> getAnswer();
 };
 
 class ACQuisitionCont : public Command {
@@ -141,7 +138,7 @@ public:
 
 class LoadFloodNormFactors : public Command {
 public:
-    LoadFloodNormFactors(LongInt<60>& val, unsigned chips_bitmap);
+    LoadFloodNormFactors(UnsignedArray<60>& val, unsigned chips_bitmap);
 };
 
 } // end namespace CMD
