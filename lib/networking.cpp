@@ -47,6 +47,7 @@ void DataReceiver::initThread() {
     if(!_thread_running) {
         _thread_running = true;
         _reader = std::thread(&DataReceiver::readerThread, this);
+        _reader.detach();
     }
 }
 
@@ -74,8 +75,9 @@ void DataReceiver::readerThread() {
 }
 
 void DataReceiver::joinThread() {
-    if(_thread_running)
-        _reader.join();
+    //if(_thread_running)
+        //_reader.~thread();
+        //_reader.join();
 }
 
 void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
