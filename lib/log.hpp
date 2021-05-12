@@ -8,4 +8,4 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks();
 
 spdlogger NewLogger(const std::string& name);
 
-extern spdlogger logger;
+static auto logger = NewLogger("global");
