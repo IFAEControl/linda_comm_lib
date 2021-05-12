@@ -54,7 +54,7 @@ SetTPDAC::SetTPDAC(unsigned counts) : Command("set_tpdac") {
     m.body["arguments"] = args;
 }
 
-ChipRegisterWrite::ChipRegisterWrite(uint156_t& val, unsigned chips_bitmap) : Command("chip_reg_write") {
+ChipRegisterWrite::ChipRegisterWrite(UnsignedArray<5>& val, unsigned chips_bitmap) : Command("chip_reg_write") {
     json args;
     args["chip_reg"] = val.val();
     m.body["chips_bitmap"] = chips_bitmap;
@@ -67,7 +67,7 @@ ChipRegisterRead::ChipRegisterRead(unsigned chips_bitmap) : Command("chip_reg_re
     m.body["arguments"] = args;
 }
 
-uint156_t ChipRegisterRead::getAnswer() {
+UnsignedArray<5> ChipRegisterRead::getAnswer() {
     return m.body["answer"]["chip_reg"];
 }
 
@@ -77,11 +77,11 @@ FullArrayChipRegisterRead::FullArrayChipRegisterRead(unsigned chips_bitmap) : Co
     m.body["arguments"] = args;
 }
 
-LongInt<150> FullArrayChipRegisterRead::getAnswer() {
+UnsignedArray<150> FullArrayChipRegisterRead::getAnswer() {
     return m.body["answer"]["chip_reg"];
 }
 
-PixelRegisterWrite::PixelRegisterWrite(uint15360_t& val, unsigned chips_bitmap) : Command("pixel_reg_write") {
+PixelRegisterWrite::PixelRegisterWrite(UnsignedArray<480>& val, unsigned chips_bitmap) : Command("pixel_reg_write") {
     json args;
     args["pixel_reg"] = val.val();
     m.body["chips_bitmap"] = chips_bitmap;
@@ -94,7 +94,7 @@ PixelRegisterRead::PixelRegisterRead(unsigned chips_bitmap) : Command("pixel_reg
     m.body["arguments"] = args;
 }
 
-uint15360_t PixelRegisterRead::getAnswer() {
+UnsignedArray<480> PixelRegisterRead::getAnswer() {
     return m.body["answer"]["pixel_reg"];
 }
 
@@ -104,7 +104,7 @@ FullArrayPixelRegisterRead::FullArrayPixelRegisterRead(unsigned chips_bitmap) : 
     m.body["arguments"] = args;
 }
 
-LongInt<14400> FullArrayPixelRegisterRead::getAnswer() {
+UnsignedArray<14400> FullArrayPixelRegisterRead::getAnswer() {
     return m.body["answer"]["pixel_reg"];
 }
 
@@ -124,7 +124,7 @@ FullArrayReadEricaID::FullArrayReadEricaID(unsigned chips_bitmap) : Command("rea
     m.body["arguments"] = args;
 }
 
-LongInt<30> FullArrayReadEricaID::getAnswer() {
+UnsignedArray<30> FullArrayReadEricaID::getAnswer() {
     return m.body["answer"]["chip_id"];
 }
 
@@ -142,7 +142,7 @@ ACQuisition::ACQuisition(const AcqInfo& info, unsigned frames, unsigned chips_bi
     m.body["arguments"] = args;
 }
 
-LongInt<480> ACQuisition::getAnswer() {
+UnsignedArray<480> ACQuisition::getAnswer() {
     return m.body["answer"]["frame"];
 }
 
@@ -170,7 +170,7 @@ CameraReset::CameraReset() : Command("camera_reset") {
 ControllerReset::ControllerReset() : Command("controller_reset") {
 }
 
-LoadFloodNormFactors::LoadFloodNormFactors(LongInt<60>& val, unsigned chips_bitmap) : Command("load_flood_norm_factors") {
+LoadFloodNormFactors::LoadFloodNormFactors(UnsignedArray<60>& val, unsigned chips_bitmap) : Command("load_flood_norm_factors") {
     json args;
     args["factors"] = val.val();
     m.body["chips_bitmap"] = chips_bitmap;

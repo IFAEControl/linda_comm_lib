@@ -143,7 +143,7 @@ int ChipRegisterWrite(const unsigned in[5], int chips_bitmap) {
         chip_register[i] = in[i];
     return 0;
 #else
-    uint156_t chips_reg = in;
+    UnsignedArray<5> chips_reg = in;
     CMD::ChipRegisterWrite cmd(chips_reg, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
@@ -200,7 +200,7 @@ int PixelRegisterWrite(const unsigned in[480], int chips_bitmap) {
         pixel_register[i] = in[i];
     return 0;
 #else
-    uint15360_t pixel_reg = in;
+    UnsignedArray<480> pixel_reg = in;
     CMD::PixelRegisterWrite cmd(pixel_reg, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
@@ -334,7 +334,7 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 #ifdef DUMMY
     return 0;
 #else
-    LongInt<60> factors = in;
+    UnsignedArray<60> factors = in;
     CMD::LoadFloodNormFactors cmd(factors, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
