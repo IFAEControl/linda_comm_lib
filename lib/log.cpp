@@ -5,6 +5,9 @@
 
 #include "log.hpp"
 
+spdlogger logger = NewLogger("global");
+
+
 const std::vector<spdlog::sink_ptr> CreateLogSinks() {
     namespace spsinks = spdlog::sinks;
 
