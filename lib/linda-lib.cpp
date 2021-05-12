@@ -12,7 +12,7 @@
 #include "networking.hpp"
 #include "log.hpp"
 
-Networking n;
+static Networking n;
 
 #ifdef DUMMY
     #define X_SIZE 20
