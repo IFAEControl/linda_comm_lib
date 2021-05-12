@@ -53,8 +53,13 @@ void DataReceiver::initThread() {
 
 
 void DataReceiver::readerThread() {
-    Poco::Net::StreamSocket dgs(_sa);
+    Poco::Net::DatagramSocket dgs;
+    dgs.connect(_sa);
     dgs.setBlocking(true);
+
+    // Tell the server we are listening
+    char c = 0xff;
+    dgs.sendBytes(&c, 1);
 
     while(_thread_running) {
         BaseHeaderType type;
@@ -62,6 +67,8 @@ void DataReceiver::readerThread() {
         dgs.receiveBytes(&type.packtype, sizeof(type), MSG_WAITALL);
         if(type.packtype == HEADER_PACKTYPE::ERROR) {
             logger->error("Error on asyncs");
+
+            // Remove buffered data
             dgs.close();
             dgs.connect(_sa);
             continue;
