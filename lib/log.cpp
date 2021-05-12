@@ -1,5 +1,3 @@
-#include <filesystem>
-
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
@@ -18,16 +16,13 @@ const std::vector<spdlog::sink_ptr> CreateLogSinks() {
     sinks.back()->set_level(spdlog::level::info);
 
 #ifdef _WIN32
-    std::filesystem::path tmp_dir = "C:\\Windows\\Temp\\";
+    std::string tmp_dir = "C:\\Windows\\Temp\\";
 #else
-    std::filesystem::path tmp_dir = "/tmp/";
-#endif  
-
-    auto fname = tmp_dir/"linda.log";
-    std::filesystem::remove(fname);
+    std::string tmp_dir = "/tmp/";
+#endif
 
     sinks.emplace_back(
-        std::make_shared<spsinks::basic_file_sink_mt>(fname.string(), false));
+        std::make_shared<spsinks::basic_file_sink_mt>(tmp_dir + "linda.log", false));
     sinks.back()->set_level(spdlog::level::debug);
 
     return sinks;
