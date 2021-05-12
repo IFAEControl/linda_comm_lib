@@ -11,7 +11,7 @@
 #include "header.hpp"
 #include "frame_buffer.hpp"
 
-extern FrameBuffer fb;
+static FrameBuffer fb;
 
 class CmdSender {
 public:
