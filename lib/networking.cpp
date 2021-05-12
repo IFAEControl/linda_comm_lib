@@ -15,7 +15,7 @@
 using Poco::Net::IPAddress;
 using namespace CMD;
 
-FrameBuffer fb;
+//static FrameBuffer fb;
 
 CmdSender::CmdSender(const std::string& ip, unsigned short p) :
     _sa{ip, p}
