@@ -62,9 +62,11 @@ void DataReceiver::readerThread() {
     dgs.sendBytes(&c, 1);
 
     while(_thread_running) {
+        char buf[14408];
         BaseHeaderType type;
 
-        dgs.receiveBytes(&type.packtype, sizeof(type), MSG_WAITALL);
+        dgs.receiveBytes(&buf, 14408);
+        memcpy(&type, buf, sizeof(type));
         if(type.packtype == HEADER_PACKTYPE::ERROR) {
             logger->error("Error on asyncs");
 
@@ -76,7 +78,8 @@ void DataReceiver::readerThread() {
 
         auto bytes = type.packetsize;
         Frame f(bytes);
-        int n = dgs.receiveBytes(f.get(), bytes, MSG_WAITALL);
+        memcpy(f.get(), buf + sizeof(type), bytes);
+        //int n = dgs.receiveBytes(f.get(), bytes, MSG_WAITALL);
         fb.addFrame(std::move(f));
     } 
 }
