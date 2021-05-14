@@ -76,6 +76,8 @@ void DataReceiver::readerThread() {
             continue;
         }
 
+        auto number = type.number;
+        logger->info("Packet number: {}", number);
         auto bytes = type.packetsize;
         Frame f(bytes);
         memcpy(f.get(), buf + sizeof(type), bytes);

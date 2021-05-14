@@ -29,7 +29,8 @@ struct BaseHeaderType {
      *
      */
     HEADER_PACKTYPE packtype;
-    uint8_t reserved[3];
+    uint8_t reserved;
+    uint16_t number;
     uint32_t packetsize;
 };
 
