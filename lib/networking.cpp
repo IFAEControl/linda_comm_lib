@@ -62,10 +62,10 @@ void DataReceiver::readerThread() {
     dgs.sendBytes(&c, 1);
 
     while(_thread_running) {
-        char buf[14408];
+        char buf[57608];
         BaseHeaderType type;
 
-        dgs.receiveBytes(&buf, 14408);
+        dgs.receiveBytes(&buf, 57608);
         memcpy(&type, buf, sizeof(type));
         if(type.packtype == HEADER_PACKTYPE::ERROR) {
             logger->error("Error on asyncs");
