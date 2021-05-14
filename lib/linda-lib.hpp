@@ -30,7 +30,6 @@ DllExport int ACQuisitionCont(AcqInfo info, int chips_bitmap);
 /// @brief copies last frame to provided pointer
 /// @return 0 in case of success, -1 if a cancel has been requested
 DllExport int PopData(unsigned* data);
-DllExport int PopFrames(unsigned* data, unsigned frames);
 DllExport void CancelPopFrame();
 DllExport int ACQuisitionStop();
 DllExport int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap);

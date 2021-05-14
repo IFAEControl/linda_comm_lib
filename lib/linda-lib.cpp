@@ -281,27 +281,6 @@ int PopData(unsigned* data) {
 #endif
 }
 
-int PopFrames(unsigned* data, unsigned frames) {
-#ifdef DUMMY
-    for (uint32_t j = 0; j < frames; j++) {
-        for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
-            for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
-                data[(j * X_SIZE * Y_SIZE * N_WORDS_PIXEL) + (i * N_WORDS_PIXEL) + k] = i + (i << 16);
-            }
-        }
-    }
-    return 0;
-#else
-    unsigned bytes = 0;
-    for(unsigned i = 0; i < frames; i++) {
-        bytes = fb.moveLastFrame(data + bytes);
-        if(bytes < 0)
-            return bytes;
-    }
-    return 0;
-#endif
-}
-
 void CancelPopFrame() {
     fb.cancel();
 }
