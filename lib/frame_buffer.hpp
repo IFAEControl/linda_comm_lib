@@ -32,6 +32,7 @@ public:
 
 	std::size_t getWriteFrame() const;
 	std::size_t getReadFrame() const;
+	std::size_t currFrames() const;
 private:
 	void incWriteFrame();
 	void incReadFrame();

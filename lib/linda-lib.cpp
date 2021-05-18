@@ -333,3 +333,7 @@ unsigned GetWriteIdx() {
 unsigned GetReadIdx() {
     return fb.getReadFrame();
 }
+
+unsigned GetElemCounter() {
+    return fb.currFrames();
+}

@@ -62,7 +62,7 @@ int FrameBuffer::moveLastFrame(unsigned* data) {
 		return -1;
 	}
 
-	logger->debug("Retrieveing frame");
+	logger->debug("Retrieving frame");
 
 	_mutex.lock();
 	
@@ -102,6 +102,10 @@ std::size_t FrameBuffer::getWriteFrame() const {
 
 std::size_t FrameBuffer::getReadFrame() const {
 	return _curr_read_frame;
+}
+
+std::size_t FrameBuffer::currFrames() const {
+	return _buf.size();	
 }
 
 void FrameBuffer::incWriteFrame() {
