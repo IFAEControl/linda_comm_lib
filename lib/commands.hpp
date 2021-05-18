@@ -141,4 +141,10 @@ public:
     LoadFloodNormFactors(UnsignedArray<60>& val, unsigned chips_bitmap);
 };
 
+class GetAllRegs : public Command {
+public:
+    GetAllRegs();
+    json getAnswer();
+};
+
 } // end namespace CMD

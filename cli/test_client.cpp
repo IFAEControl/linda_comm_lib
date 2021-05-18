@@ -154,6 +154,13 @@ int main(int argc, char* argv[]) {
             "Load norm factors"
     );
 
+    rootMenu -> Insert(
+            "print_regs", [&](std::ostream& out) {
+                PrintAllRegs();
+            },
+            "Print internal linda regs"
+    );
+
 
     Cli cli(std::move(rootMenu));
     CliFileSession input(cli);

@@ -36,12 +36,17 @@ DllExport int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap);
 DllExport int SetHV(unsigned counts);
 DllExport int SetTPDAC(unsigned counts);
 
-// Internal DLL functions for debugging purposes
+// Debugging functions
 
+DllExport void PrintAllRegs();
+
+// Internal DLL functions
+
+// @brief Returns the number of elements in the buffer
+DllExport unsigned GetElemCounter();
 DllExport void ResetBuffer();
 DllExport unsigned GetWriteIdx();
 DllExport unsigned GetReadIdx();
-// @brief Returns the number of elements in the buffer
-DllExport unsigned GetElemCounter();
+
 
 } // end extern "C"

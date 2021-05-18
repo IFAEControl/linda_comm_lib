@@ -320,7 +320,20 @@ int LoadFloodNormFactors(const unsigned in[60], int chips_bitmap){
 #endif
 }
 
-// Internal DLL functions for debugging purposes
+// Debugging functions
+
+void PrintAllRegs() {
+#ifdef DUMMY
+    return 0;
+#else
+    CMD::GetAllRegs cmd;
+    auto resp = sendCmd(cmd);
+    std::cout << resp.second.value() << std::endl;
+#endif  
+}
+
+
+// Internal DLL functions 
 
 void ResetBuffer() {
     fb.reset();

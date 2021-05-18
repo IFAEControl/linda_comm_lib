@@ -177,4 +177,11 @@ LoadFloodNormFactors::LoadFloodNormFactors(UnsignedArray<60>& val, unsigned chip
     m.body["arguments"] = args;
 }
 
+GetAllRegs::GetAllRegs() : Command("get_all_regs") {
+}
+
+json GetAllRegs::getAnswer() {
+    return m.body["answer"];
+}
+
 } // end namespace CMD
