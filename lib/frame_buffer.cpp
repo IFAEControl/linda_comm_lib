@@ -56,7 +56,7 @@ int FrameBuffer::moveLastFrame(unsigned* data) {
     std::unique_lock<std::mutex> lk{cv_m};
 
 	// wait for a frame	
-	_cv.wait(lk, [&]{return _available_frames > 0;});
+	_cv.wait(lk, [&]{return _cancel || _available_frames > 0;});
 	if(_cancel) {
 		_cancel = false;
 		return -1;

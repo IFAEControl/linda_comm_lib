@@ -73,6 +73,7 @@ void DataReceiver::readerThread() {
             // Remove buffered data
             dgs.close();
             dgs.connect(_sa);
+            fb.cancel();
             continue;
         }
 
