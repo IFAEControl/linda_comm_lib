@@ -303,6 +303,13 @@ int ACQuisition(AcqInfo info, unsigned frames, int chips_bitmap) {
     n_frames = frames;
     return 0;
 #else
+    if(info.tdi) {
+        if(frames % 8 != 0)
+            return -3;
+
+        frames += 7;
+    }
+
     CMD::ACQuisition cmd(info, frames, chips_bitmap);
     auto resp = sendCmd(cmd);
     return resp.first;
