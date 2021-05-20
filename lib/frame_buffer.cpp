@@ -105,7 +105,7 @@ std::size_t FrameBuffer::getReadFrame() const {
 }
 
 std::size_t FrameBuffer::currFrames() const {
-	return _buf.size();	
+	return _available_frames;	
 }
 
 void FrameBuffer::incWriteFrame() {
