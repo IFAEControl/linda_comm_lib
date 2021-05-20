@@ -2,6 +2,7 @@
 #include <sstream>
 #include <memory>
 #include <cstring>
+#include <optional>
 
 #include <Poco/Net/DatagramSocket.h>
 #include <Poco/Net/SocketStream.h>
@@ -61,13 +62,16 @@ void DataReceiver::readerThread() {
     char c = 0xff;
     dgs.sendBytes(&c, 1);
 
+    unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
+    std::optional<uint16_t> old_pnum{};
     while(_thread_running) {
-        char buf[57608];
-        BaseHeaderType type;
+        char buf[max_dgram_size];
 
-        dgs.receiveBytes(&buf, 57608);
-        memcpy(&type, buf, sizeof(type));
-        if(type.packtype == HEADER_PACKTYPE::ERROR) {
+        dgs.receiveBytes(&buf, max_dgram_size);
+
+        BaseHeaderType header;
+        memcpy(&header, buf, sizeof(header));
+        if(header.packtype == HEADER_PACKTYPE::ERROR) {
             logger->error("Error on asyncs");
 
             // Remove buffered data
@@ -77,12 +81,16 @@ void DataReceiver::readerThread() {
             continue;
         }
 
-        auto number = type.number;
-        logger->info("Packet number: {}", number);
-        auto bytes = type.packetsize;
+        auto number = header.number;
+        if(old_pnum.has_value() && uint16_t(number-1) != old_pnum) {
+            logger->warn("Packet {} lost", uint16_t(number-1));
+        }
+        old_pnum = number;
+
+        auto bytes = header.packetsize;
         Frame f(bytes);
-        memcpy(f.get(), buf + sizeof(type), bytes);
-        //int n = dgs.receiveBytes(f.get(), bytes, MSG_WAITALL);
+        memcpy(f.get(), buf + sizeof(header), bytes);
+
         fb.addFrame(std::move(f));
     } 
 }
