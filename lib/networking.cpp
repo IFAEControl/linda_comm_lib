@@ -62,7 +62,7 @@ void DataReceiver::readerThread() {
     char c = 0xff;
     dgs.sendBytes(&c, 1);
 
-    unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
+    constexpr unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
     std::optional<uint16_t> old_pnum{};
     while(_thread_running) {
         char buf[max_dgram_size];
