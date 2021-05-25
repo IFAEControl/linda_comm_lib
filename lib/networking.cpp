@@ -33,8 +33,10 @@ T CmdSender::sendCommand(T&& c) {
     std::stringstream ss;
     Poco::StreamCopier::copyStream(str, ss);
     std::memcpy(&m.header, ss.str().c_str(), HEADER_BYTE_SIZE);
-    if(m.header.packtype == HEADER_PACKTYPE::ERROR)
+    if(m.header.packtype == HEADER_PACKTYPE::ERROR) {
+        _socket.close();
         throw std::runtime_error("Command error");
+    }
     m.body = json::parse(ss.seekg(HEADER_BYTE_SIZE));
     _socket.close();
     return std::move(c);
@@ -83,7 +85,7 @@ void DataReceiver::readerThread() {
 
         auto number = header.number;
         if(old_pnum.has_value() && uint16_t(number-1) != old_pnum) {
-            logger->warn("Packet {} lost", uint16_t(number-1));
+            logger->warn("Packets lost. Last seen packet={}, current packet={}", old_pnum.value(), uint16_t(number-1));
         }
         old_pnum = number;
 
