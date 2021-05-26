@@ -79,6 +79,10 @@ void DataReceiver::readerThread() {
             // Remove buffered data
             dgs.close();
             dgs.connect(_sa);
+            // Tell the server we are listening
+            char c = 0xff;
+            dgs.sendBytes(&c, 1);
+
             fb.cancel();
             continue;
         }
