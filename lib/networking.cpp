@@ -66,6 +66,7 @@ void DataReceiver::readerThread() {
         BaseHeaderType header;
         memcpy(&header, buf, sizeof(header));
         if(header.packtype == HEADER_PACKTYPE::ERROR) {
+            _timeouts++;
             logger->error("Error on asyncs");
 
             // Remove buffered data
@@ -104,6 +105,14 @@ void DataReceiver::joinThread() {
         //_reader.join();
 }
 
+unsigned DataReceiver::getTimeouts() const {
+    return _timeouts;
+}
+
+void DataReceiver::resetTimeouts() {
+    _timeouts = 0;
+}
+
 void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
     _ip = ip;
     _cmd_sender = CmdSender(_ip, port);
@@ -122,6 +131,14 @@ void Networking::joinThread() {
 template<typename T>
 T Networking::sendCommand(T&& c) {
     return std::move(_cmd_sender.sendCommand(std::move(c)));
+}
+
+unsigned Networking::getTimeoutsCounter() const {
+    return _data_receiver.getTimeouts();
+}
+
+void Networking::resetTimeoutsCounter() {
+    _data_receiver.resetTimeouts();
 }
 
 TEMPLATE_COMMAND(ReadTemperature);

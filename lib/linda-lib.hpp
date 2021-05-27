@@ -39,13 +39,15 @@ DllExport int SetTPDAC(unsigned counts);
 // Debugging functions
 
 DllExport void PrintAllRegs();
-DllExport unsigned GetDataIRQs(unsigned* n);
+DllExport unsigned GetDataIRQs(unsigned* data);
 
 // Internal DLL functions
 
 // @brief Returns the number of elements in the buffer
 DllExport unsigned GetElemCounter();
 DllExport void ResetBuffer();
+DllExport unsigned GetTimeoutsCounter();
+DllExport void ResetTimeoutsCounter();
 DllExport unsigned GetWriteIdx();
 DllExport unsigned GetReadIdx();
 

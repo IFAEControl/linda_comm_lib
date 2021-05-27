@@ -30,10 +30,14 @@ public:
 	DataReceiver(const std::string& ip, unsigned short port);
 	void initThread();
 	void joinThread();
+
+	unsigned getTimeouts() const;
+	void resetTimeouts();
 private:
 	void readerThread();
 	void connect();
 
+	unsigned _timeouts{0};
 	bool _thread_running{false};
 	std::thread _reader{};
 
@@ -48,6 +52,8 @@ public:
 	template<typename T> T sendCommand(T&& c);
 	void initReceiverThread();
 	void joinThread();
+	unsigned getTimeoutsCounter() const;
+	void resetTimeoutsCounter();
 private:
 	std::string _ip{"8.8.8.8"};
 	CmdSender _cmd_sender;

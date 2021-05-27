@@ -339,23 +339,35 @@ void PrintAllRegs() {
 #endif  
 }
 
-unsigned GetDataIRQs(unsigned* n) {
-    if(!n)
+unsigned GetDataIRQs(unsigned* data) {
+    if(!data)
         return -1;
 
     CMD::GetDataIRQs cmd;
     auto resp = sendCmd(cmd);
     if (resp.first < 0) return resp.first;
 
-    *n = resp.second.value().getAnswer();
+    *data = resp.second.value().getAnswer();
     return resp.first;
 }
 
 
 // Internal DLL functions 
 
+unsigned GetElemCounter() {
+    return fb.currFrames();
+}
+
 void ResetBuffer() {
     fb.reset();
+}
+
+unsigned GetTimeoutsCounter() {
+    return n.getTimeoutsCounter();
+}
+
+void ResetTimeoutsCounter() {
+    n.resetTimeoutsCounter();
 }
 
 unsigned GetWriteIdx() {
@@ -364,8 +376,4 @@ unsigned GetWriteIdx() {
 
 unsigned GetReadIdx() {
     return fb.getReadFrame();
-}
-
-unsigned GetElemCounter() {
-    return fb.currFrames();
 }
