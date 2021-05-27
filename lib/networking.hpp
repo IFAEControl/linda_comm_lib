@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <nlohmann/json.hpp>
+#include <Poco/Net/DatagramSocket.h>
 #include <Poco/Net/SocketAddress.h>
 #include <Poco/Net/StreamSocket.h>
 
@@ -31,11 +32,14 @@ public:
 	void joinThread();
 private:
 	void readerThread();
+	void connect();
 
 	bool _thread_running{false};
 	std::thread _reader{};
 
 	Poco::Net::SocketAddress _sa;
+    Poco::Net::DatagramSocket _dgs;
+
 };
 
 class Networking {

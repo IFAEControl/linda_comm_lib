@@ -4,7 +4,6 @@
 #include <cstring>
 #include <optional>
 
-#include <Poco/Net/DatagramSocket.h>
 #include <Poco/Net/SocketStream.h>
 #include <Poco/StreamCopier.h>
 
@@ -56,20 +55,13 @@ void DataReceiver::initThread() {
 
 
 void DataReceiver::readerThread() {
-    Poco::Net::DatagramSocket dgs;
-    dgs.connect(_sa);
-    dgs.setBlocking(true);
-
-    // Tell the server we are listening
-    char c = 0xff;
-    dgs.sendBytes(&c, 1);
+    connect();
 
     constexpr unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
     std::optional<uint16_t> old_pnum{};
     while(_thread_running) {
         char buf[max_dgram_size];
-
-        dgs.receiveBytes(&buf, max_dgram_size);
+        _dgs.receiveBytes(&buf, max_dgram_size);
 
         BaseHeaderType header;
         memcpy(&header, buf, sizeof(header));
@@ -77,12 +69,8 @@ void DataReceiver::readerThread() {
             logger->error("Error on asyncs");
 
             // Remove buffered data
-            dgs.close();
-            dgs.connect(_sa);
-            // Tell the server we are listening
-            char c = 0xff;
-            dgs.sendBytes(&c, 1);
-
+            _dgs.close();
+            connect();
             fb.cancel();
             continue;
         }
@@ -99,6 +87,15 @@ void DataReceiver::readerThread() {
 
         fb.addFrame(std::move(f));
     } 
+}
+
+void DataReceiver::connect() {
+    _dgs.connect(_sa);
+    _dgs.setBlocking(true);
+
+    // Tell the server we are listening
+    char c = 0xff;
+    _dgs.sendBytes(&c, 1);
 }
 
 void DataReceiver::joinThread() {
