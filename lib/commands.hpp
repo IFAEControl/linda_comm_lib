@@ -147,4 +147,10 @@ public:
     json getAnswer();
 };
 
+class GetDataIRQs : public Command {
+public:
+    GetDataIRQs();
+    unsigned getAnswer();
+};
+
 } // end namespace CMD

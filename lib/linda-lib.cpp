@@ -46,7 +46,7 @@ Networking n;
 template <typename T>
 std::pair<int, std::optional<T>> sendCmd(T& cmd) try {
     auto resp = n.sendCommand(std::move(cmd));
-    logger->trace(resp);
+    logger->debug(resp);
     return {0, std::move(resp)};
 } catch(std::exception& e) {
     logger->critical(e.what());
@@ -337,6 +337,18 @@ void PrintAllRegs() {
     auto resp = sendCmd(cmd);
     std::cout << resp.second.value() << std::endl;
 #endif  
+}
+
+unsigned GetDataIRQs(unsigned* n) {
+    if(!n)
+        return -1;
+
+    CMD::GetDataIRQs cmd;
+    auto resp = sendCmd(cmd);
+    if (resp.first < 0) return resp.first;
+
+    *n = resp.second.value().getAnswer();
+    return resp.first;
 }
 
 

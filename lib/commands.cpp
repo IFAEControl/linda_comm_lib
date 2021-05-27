@@ -184,4 +184,11 @@ json GetAllRegs::getAnswer() {
     return m.body["answer"];
 }
 
+GetDataIRQs::GetDataIRQs() : Command("get_data_irqs") {
+}
+
+unsigned GetDataIRQs::getAnswer() {
+    return m.body["answer"]["val"];
+}
+
 } // end namespace CMD

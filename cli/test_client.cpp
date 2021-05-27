@@ -161,6 +161,15 @@ int main(int argc, char* argv[]) {
             "Print internal linda regs"
     );
 
+    rootMenu -> Insert(
+            "get_data_irqs", [&](std::ostream& out) {
+                unsigned val;
+                GetDataIRQs(&val);
+                out << val << "\n";
+            },
+            "Print internal IRQs counter"
+    );
+
 
     Cli cli(std::move(rootMenu));
     CliFileSession input(cli);

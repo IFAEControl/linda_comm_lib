@@ -39,6 +39,7 @@ DllExport int SetTPDAC(unsigned counts);
 // Debugging functions
 
 DllExport void PrintAllRegs();
+DllExport unsigned GetDataIRQs(unsigned* n);
 
 // Internal DLL functions
 
