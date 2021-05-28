@@ -11,32 +11,35 @@ std::size_t irq_err = 0;
 std::size_t packets_lost = 0;
 unsigned irqs;
 unsigned prev_irqs = 0;
-AcqInfo info{1000,14,3000,false,true,true /* tdi */};
+AcqInfo info{100,7,976,false,true,true /* tdi */};
     std::string ip = "172.16.17.94";
 
 int RunACQ(unsigned short frames, unsigned bitmap) {
-
+    //if(ACQuisitionStop() < 0) return -1;
+    //usleep(1000);
     if(ACQuisitionCont(info, bitmap) < 0) return -1;
     //for(unsigned j = 0; j < frames; j++) {
     counter = 0;
     while(true) {
-        for(unsigned i = 0;  GetElemCounter() == 0 && i < 9000; i++) usleep(60);
+        //for(unsigned i = 0;  GetElemCounter() == 0 && i < 9000; i++) usleep(60);
         //std::cout << "Counter: " << GetElemCounter() << std::endl;
 
-        unsigned elem_count = GetElemCounter();
-        if((elem_count != 0 && PopData(data) < 0) || GetTimeoutsCounter() > 0) {
+        //unsigned elem_count = GetElemCounter();
+        if(PopData(data) < 0 || GetTimeoutsCounter() > 0) {
             ResetTimeoutsCounter();
             dma_timeouts++;
             std::cout << "Error: DMA TIMEOUT" << std::endl;
             std::cout << "DMA_TIMEOUTS: " << dma_timeouts << " Error on IRQs: " << irq_err << " Packets lost: " << packets_lost << std::endl;
             //if(ACQuisition(info, frames-j-1, 1) < 0) return -1;
-        } else if(elem_count == 0) {
+        } 
+
+        /*else {
             GetDataIRQs(&irqs);
             if(irqs <= prev_irqs) {
                 irq_err++;
                 std::cout << "Error: IRQs: " << irq_err << std::endl;
                 std::cout << "DMA_TIMEOUTS: " << dma_timeouts << " Error on IRQs: " << irq_err << " Packets lost: " << packets_lost << std::endl;
-                if(ACQuisitionCont(info, bitmap) < 0) return -1;
+                //if(ACQuisitionCont(info, bitmap) < 0) return -1;
                 //if(ACQuisition(info, frames-j-1, 1) < 0) return -1;
             } /*else if(irqs > prev_irqs) {
                 packets_lost++;
@@ -45,9 +48,17 @@ int RunACQ(unsigned short frames, unsigned bitmap) {
                 // packets lost, reconenct just in case
                 //InitCommunication(ip.c_str(), 32000, 32001);
             }*/
-            prev_irqs = irqs;
+         //   prev_irqs = irqs;
+        //}
+
+        if(!(counter%1000)) {
+            GetDataIRQs(&irqs);
         }
-        std::cout << "Counter=" << ++counter << "\r";
+
+        if(!(counter%10)) 
+        std::cout << "Counter=" << counter << " IRQs=" << irqs << "\r";
+
+        ++counter;
         //std::cout << j << "/" << frames << " frames. Counter=" << ++counter << "\r";
     }
 
