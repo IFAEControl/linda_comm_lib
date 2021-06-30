@@ -46,6 +46,7 @@ DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
 {}
 
 void DataReceiver::initThread() {
+    connect();
     if(!_thread_running) {
         _thread_running = true;
         _reader = std::thread(&DataReceiver::readerThread, this);
@@ -55,8 +56,6 @@ void DataReceiver::initThread() {
 
 
 void DataReceiver::readerThread() {
-    connect();
-
     constexpr unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
     std::optional<uint16_t> old_pnum{};
     while(_thread_running) {
