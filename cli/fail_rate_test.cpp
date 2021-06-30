@@ -10,7 +10,8 @@ std::size_t dma_timeouts = 0;
 std::size_t irq_err = 0;
 std::size_t packets_lost = 0;
 unsigned irqs;
-AcqInfo info{1000,14,8000,false,true,false};
+unsigned prev_irqs = 0;
+AcqInfo info{1000,14,976,false,true,true /* tdi */};
     std::string ip = "172.16.17.94";
 
 int RunACQ(unsigned short frames, unsigned bitmap) {

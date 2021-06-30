@@ -1,4 +1,5 @@
 #include <cstring>
+#include <chrono>
 #include <iostream>
 
 #include "frame_buffer.hpp"
@@ -49,14 +50,20 @@ void FrameBuffer::addFrame(const Frame&& f) {
 	_mutex.unlock();
 }
 
-int FrameBuffer::moveLastFrame(unsigned* data) {
+int FrameBuffer::moveLastFrame(unsigned* data, unsigned ms) {
 	logger->debug("Waiting for available frames");	
 	unsigned bytes = 0;
 	std::mutex cv_m;
     std::unique_lock<std::mutex> lk{cv_m};
 
-	// wait for a frame	
-	_cv.wait(lk, [&]{return _cancel || _available_frames > 0;});
+	// wait for a frame
+	if(ms == 0) {
+		_cv.wait(lk, [&]{return _cancel || _available_frames > 0;});
+	} else {
+		auto ret = _cv.wait_for(lk, std::chrono::milliseconds(ms), [&]{return _cancel || _available_frames > 0;});
+		if(!ret) return -2;
+	}
+	
 	if(_cancel) {
 		_cancel = false;
 		return -1;

@@ -281,6 +281,19 @@ int PopData(unsigned* data) {
 #endif
 }
 
+int PopDataWithTimeout(unsigned* data, unsigned timeout_ms) {
+ #ifdef DUMMY
+        for (uint32_t i = 0; i < X_SIZE * Y_SIZE; i++) {
+            for (uint32_t k = 0; k < N_WORDS_PIXEL; k++) {
+                data[(i * N_WORDS_PIXEL) + k] = i + (i << 16);
+            }
+        }
+    return 0;
+#else
+    return fb.moveLastFrame(data, timeout_ms);
+#endif   
+}
+
 void CancelPopFrame() {
     fb.cancel();
 }

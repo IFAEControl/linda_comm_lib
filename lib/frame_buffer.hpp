@@ -26,7 +26,7 @@ private:
 class FrameBuffer {
 public:
 	void addFrame(const Frame&& f);
-	int moveLastFrame(unsigned* data);
+	int moveLastFrame(unsigned* data, unsigned ms = 0);
 	void cancel();
 	void reset();
 
