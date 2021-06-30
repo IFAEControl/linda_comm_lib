@@ -45,6 +45,10 @@ DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
     _sa{ip, p}
 {}
 
+//DataReceiver::~DataReceiver() {
+ //   _reader.~thread();
+//}
+
 void DataReceiver::initThread() {
     connect();
     if(!_thread_running) {
@@ -99,6 +103,7 @@ void DataReceiver::connect() {
 }
 
 void DataReceiver::joinThread() {
+    _reader.~thread();
     //if(_thread_running)
         //_reader.~thread();
         //_reader.join();
@@ -115,6 +120,7 @@ void DataReceiver::resetTimeouts() {
 void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
     _ip = ip;
     _cmd_sender = CmdSender(_ip, port);
+    _data_receiver.joinThread();
     _data_receiver = DataReceiver(_ip, aport);
 }
 
