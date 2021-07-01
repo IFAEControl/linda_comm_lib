@@ -45,6 +45,11 @@ DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
     _sa{ip, p}
 {}
 
+void DataReceiver::configure(const std::string& ip, unsigned short port) {
+    _sa = Poco::Net::SocketAddress(ip, port);
+    connect();
+}
+
 //DataReceiver::~DataReceiver() {
  //   _reader.~thread();
 //}
