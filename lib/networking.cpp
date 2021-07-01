@@ -54,7 +54,6 @@ void DataReceiver::initThread() {
     if(!_thread_running) {
         _thread_running = true;
         _reader = std::thread(&DataReceiver::readerThread, this);
-        _reader.detach();
     }
 }
 
@@ -63,39 +62,44 @@ void DataReceiver::readerThread() {
     constexpr unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
     std::optional<uint16_t> old_pnum{};
     while(_thread_running) {
-        char buf[max_dgram_size];
-        _dgs.receiveBytes(&buf, max_dgram_size);
+        try {
+            char buf[max_dgram_size];
+            _dgs.receiveBytes(&buf, max_dgram_size);
 
-        BaseHeaderType header;
-        memcpy(&header, buf, sizeof(header));
-        if(header.packtype == HEADER_PACKTYPE::ERROR) {
-            _timeouts++;
-            logger->error("Error on asyncs");
+            BaseHeaderType header;
+            memcpy(&header, buf, sizeof(header));
+            if(header.packtype == HEADER_PACKTYPE::ERROR) {
+                _timeouts++;
+                logger->error("Error on asyncs");
 
-            // Remove buffered data
-            _dgs.close();
-            connect();
-            fb.cancel();
-            continue;
+                // Remove buffered data
+                _dgs.close();
+                connect();
+                fb.cancel();
+                continue;
+            }
+
+            auto number = header.number;
+            if(old_pnum.has_value() && uint16_t(number-1) != old_pnum) {
+                logger->warn("Packets lost. Last seen packet={}, current packet={}", old_pnum.value(), uint16_t(number-1));
+            }
+            old_pnum = number;
+
+            auto bytes = header.packetsize;
+            Frame f(bytes);
+            memcpy(f.get(), buf + sizeof(header), bytes);
+
+            fb.addFrame(std::move(f));
+        } catch(Poco::TimeoutException& e) {
+            // ignore timeouts
         }
-
-        auto number = header.number;
-        if(old_pnum.has_value() && uint16_t(number-1) != old_pnum) {
-            logger->warn("Packets lost. Last seen packet={}, current packet={}", old_pnum.value(), uint16_t(number-1));
-        }
-        old_pnum = number;
-
-        auto bytes = header.packetsize;
-        Frame f(bytes);
-        memcpy(f.get(), buf + sizeof(header), bytes);
-
-        fb.addFrame(std::move(f));
     } 
 }
 
 void DataReceiver::connect() {
     _dgs.connect(_sa);
     _dgs.setBlocking(true);
+    _dgs.setReceiveTimeout(Poco::Timespan(1, 0));
 
     // Tell the server we are listening
     char c = 0xff;
@@ -103,10 +107,10 @@ void DataReceiver::connect() {
 }
 
 void DataReceiver::joinThread() {
-    _reader.~thread();
-    //if(_thread_running)
-        //_reader.~thread();
-        //_reader.join();
+    if(_thread_running) {
+        _thread_running = false;
+        _reader.join();
+    }
 }
 
 unsigned DataReceiver::getTimeouts() const {
@@ -119,8 +123,8 @@ void DataReceiver::resetTimeouts() {
 
 void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
     _ip = ip;
+    joinThread();
     _cmd_sender = CmdSender(_ip, port);
-    _data_receiver.joinThread();
     _data_receiver = DataReceiver(_ip, aport);
 }
 
