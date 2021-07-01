@@ -28,6 +28,7 @@ class DataReceiver {
 public:
 	DataReceiver() =default;
 	DataReceiver(const std::string& ip, unsigned short port);
+    void configure(const std::string& ip, unsigned short port);
 	void initThread();
 	void joinThread();
 
