@@ -92,6 +92,11 @@ void DataReceiver::readerThread() {
     } 
 }
 
+bool DataReceiver::threadRunning() const {
+    return _thread_running;
+}
+
+
 void DataReceiver::connect() {
     _dgs.connect(_sa);
     _dgs.setBlocking(true);
@@ -117,11 +122,16 @@ void DataReceiver::resetTimeouts() {
     _timeouts = 0;
 }
 
-void Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
+int Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
+    if(_data_receiver.threadRunning()) {
+        logger->error("Already configured, doing nothing");
+        return -1;
+    }
+
     _ip = ip;
-    joinThread();
     _cmd_sender = CmdSender(_ip, port);
     _data_receiver = DataReceiver(_ip, aport);
+    return 0;
 }
 
 
