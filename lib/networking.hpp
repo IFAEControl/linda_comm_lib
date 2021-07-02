@@ -30,6 +30,7 @@ public:
 	DataReceiver(const std::string& ip, unsigned short port);
 	void initThread();
 	void joinThread();
+	bool threadRunning() const;
 
 	unsigned getTimeouts() const;
 	void resetTimeouts();
@@ -48,7 +49,7 @@ private:
 
 class Networking {
 public:
-	void configure(std::string ip, unsigned short port, unsigned short aport);
+	int configure(std::string ip, unsigned short port, unsigned short aport);
 	template<typename T> T sendCommand(T&& c);
 	void initReceiverThread();
 	void joinThread();

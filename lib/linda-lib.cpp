@@ -62,12 +62,14 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
         chip_register[i] = 0;
     for (int i=0; i<480; i++)
         pixel_register[i] = 0;
+    return 0;
 #else
     logger->info("Connecting");
-    n.configure(str, sync_port, async_port);
+    if(auto ret = n.configure(str, sync_port, async_port); ret)
+        return ret;
     n.initReceiverThread();
-#endif
     return 0;
+#endif
 }
 
 void CloseCommunication() {
@@ -113,6 +115,23 @@ int ReadTemperature(unsigned* temp, int chips_bitmap) {
     if(resp.first < 0) return resp.first;
 
     *temp = resp.second.value().getAnswer();
+    return resp.first;
+#endif
+}
+
+int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
+#ifdef DUMMY
+    return 0;
+#else
+    if(!temp)
+        return -1;
+
+    CMD::FullArrayReadTemperature cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.value().getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), temp);
     return resp.first;
 #endif
 }
@@ -257,14 +276,6 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
     auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), id);
     return resp.first;
-#endif
-}
-
-int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
-#ifdef DUMMY
-    return 0;
-#else
-    return 0;
 #endif
 }
 
