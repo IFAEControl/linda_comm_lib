@@ -67,7 +67,8 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     logger->info("Connecting");
     if(auto ret = n.configure(str, sync_port, async_port); ret)
         return ret;
-    n.initReceiverThread();
+    if(n.initReceiverThread() < 0)
+        return -1;
     return 0;
 #endif
 }

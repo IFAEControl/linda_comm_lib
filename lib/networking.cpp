@@ -45,12 +45,15 @@ DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
     _sa{ip, p}
 {}
 
-void DataReceiver::initThread() {
-    connect();
+int DataReceiver::initThread() {
+    if(connect() < 0) return -1;
+
     if(!_thread_running) {
         _thread_running = true;
         _reader = std::thread(&DataReceiver::readerThread, this);
     }
+
+    return 0;
 }
 
 
@@ -97,7 +100,7 @@ bool DataReceiver::threadRunning() const {
 }
 
 
-void DataReceiver::connect() {
+int DataReceiver::connect() {
     _dgs.connect(_sa);
     _dgs.setBlocking(true);
     _dgs.setReceiveTimeout(Poco::Timespan(1, 0));
@@ -111,12 +114,13 @@ void DataReceiver::connect() {
         try {
             _dgs.receiveBytes(&c, 1);
             // If we receive a packet then client has been registered
-            return;
+            return 0;
         } catch(Poco::TimeoutException& e) {
-            // ignore
+            logger->warn("Registration: try {} failed", i);
         }
     }
-    logger->error("Registration failed");
+    logger->error("Given up. Registration failed");
+    return -1;
 }
 
 void DataReceiver::joinThread() {
@@ -148,8 +152,8 @@ int Networking::configure(std::string ip, unsigned short port, unsigned short ap
 }
 
 
-void Networking::initReceiverThread() {
-    _data_receiver.initThread();
+int Networking::initReceiverThread() {
+    return _data_receiver.initThread();
 }
 
 void Networking::joinThread() {
