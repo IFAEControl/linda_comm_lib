@@ -102,9 +102,21 @@ void DataReceiver::connect() {
     _dgs.setBlocking(true);
     _dgs.setReceiveTimeout(Poco::Timespan(1, 0));
 
-    // Tell the server we are listening
-    char c = 0xff;
-   	_dgs.sendBytes(&c, 1);
+    unsigned tries = 10;
+    for(int i = 0; i < tries; i++) {
+        // Tell the server we are listening
+        char c = 0xff;
+        _dgs.sendBytes(&c, 1);
+
+        try {
+            _dgs.receiveBytes(&c, 1);
+            // If we receive a packet then client has been registered
+            return;
+        } catch(Poco::TimeoutException& e) {
+            // ignore
+        }
+    }
+    logger->error("Registration failed");
 }
 
 void DataReceiver::joinThread() {
