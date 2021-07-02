@@ -104,8 +104,7 @@ void DataReceiver::connect() {
 
     // Tell the server we are listening
     char c = 0xff;
-    for(int i = 0; i < 5; i++)
-    	_dgs.sendBytes(&c, 1);
+   	_dgs.sendBytes(&c, 1);
 }
 
 void DataReceiver::joinThread() {
