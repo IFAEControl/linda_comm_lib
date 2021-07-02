@@ -119,6 +119,23 @@ int ReadTemperature(unsigned* temp, int chips_bitmap) {
 #endif
 }
 
+int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
+#ifdef DUMMY
+    return 0;
+#else
+    if(!temp)
+        return -1;
+
+    CMD::FullArrayReadTemperature cmd(chips_bitmap);
+    auto resp = sendCmd(cmd);
+    if(resp.first < 0) return resp.first;
+
+    auto out_arr = resp.second.value().getAnswer();
+    std::copy(out_arr.begin(), out_arr.end(), temp);
+    return resp.first;
+#endif
+}
+
 int SetHV(unsigned counts) {
 #ifdef DUMMY
     return 0;
@@ -259,15 +276,6 @@ int FullArrayReadEricaID(unsigned id[30], int chips_bitmap) {
     auto out_arr = resp.second.value().getAnswer();
     std::copy(out_arr.begin(), out_arr.end(), id);
     return resp.first;
-#endif
-}
-
-int FullArrayReadReadTemperature(unsigned temp[30], int chips_bitmap) {
-#ifdef DUMMY
-    return 0;
-#else
-    
-    return 0;
 #endif
 }
 

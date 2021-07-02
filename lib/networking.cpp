@@ -157,6 +157,7 @@ void Networking::resetTimeoutsCounter() {
 }
 
 TEMPLATE_COMMAND(ReadTemperature);
+TEMPLATE_COMMAND(FullArrayReadTemperature);
 TEMPLATE_COMMAND(SetHV);
 TEMPLATE_COMMAND(SetTPDAC);
 TEMPLATE_COMMAND(ChipRegisterWrite);

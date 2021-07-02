@@ -54,6 +54,12 @@ public:
     unsigned getAnswer();
 };
 
+class FullArrayReadTemperature : public Command {
+public:
+    FullArrayReadTemperature(unsigned chips_bitmap);
+    UnsignedArray<30> getAnswer();
+};
+
 class SetHV : public Command {
 public:
     SetHV(unsigned counts);
