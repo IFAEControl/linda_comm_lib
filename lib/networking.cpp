@@ -45,12 +45,15 @@ DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
     _sa{ip, p}
 {}
 
-void DataReceiver::initThread() {
-    connect();
+int DataReceiver::initThread() {
+    if(connect() < 0) return -1;
+
     if(!_thread_running) {
         _thread_running = true;
         _reader = std::thread(&DataReceiver::readerThread, this);
     }
+
+    return 0;
 }
 
 
@@ -97,15 +100,26 @@ bool DataReceiver::threadRunning() const {
 }
 
 
-void DataReceiver::connect() {
+int DataReceiver::connect() {
     _dgs.connect(_sa);
     _dgs.setBlocking(true);
     _dgs.setReceiveTimeout(Poco::Timespan(1, 0));
+    unsigned tries = 10;
+    for(int i = 0; i < tries; i++) {
+        // Tell the server we are listening
+        char c = 0xff;
+        _dgs.sendBytes(&c, 1);
 
-    // Tell the server we are listening
-    char c = 0xff;
-    for(int i = 0; i < 5; i++)
-    	_dgs.sendBytes(&c, 1);
+        try {
+            _dgs.receiveBytes(&c, 1);
+            // If we receive a packet then client has been registered
+            return 0;
+        } catch(Poco::TimeoutException& e) {
+            logger->warn("Registration: try {} failed", i);
+        }
+    }
+    logger->error("Given up. Registration failed");
+    return -1;
 }
 
 void DataReceiver::joinThread() {
@@ -132,12 +146,13 @@ int Networking::configure(std::string ip, unsigned short port, unsigned short ap
     _ip = ip;
     _cmd_sender = CmdSender(_ip, port);
     _data_receiver = DataReceiver(_ip, aport);
+    _data_receiver = DataReceiver(_ip, aport);
     return 0;
 }
 
 
-void Networking::initReceiverThread() {
-    _data_receiver.initThread();
+int Networking::initReceiverThread() {
+    return _data_receiver.initThread();
 }
 
 void Networking::joinThread() {
@@ -158,6 +173,7 @@ void Networking::resetTimeoutsCounter() {
 }
 
 TEMPLATE_COMMAND(ReadTemperature);
+TEMPLATE_COMMAND(FullArrayReadTemperature);
 TEMPLATE_COMMAND(SetHV);
 TEMPLATE_COMMAND(SetTPDAC);
 TEMPLATE_COMMAND(ChipRegisterWrite);

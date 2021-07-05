@@ -42,6 +42,16 @@ unsigned ReadTemperature::getAnswer() {
     return m.body["answer"]["temperature"];
 }
 
+FullArrayReadTemperature::FullArrayReadTemperature(unsigned chips_bitmap) : Command("full_read_temperature") {
+    json args;
+    args["chips_bitmap"] = chips_bitmap;
+    m.body["arguments"] = args;
+}
+
+UnsignedArray<30> FullArrayReadTemperature::getAnswer() {
+    return m.body["answer"]["temperature"];
+}
+
 SetHV::SetHV(unsigned counts) : Command("set_hv") {
     json args;
     args["counts"] = counts;
