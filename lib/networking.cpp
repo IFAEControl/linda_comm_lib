@@ -147,7 +147,6 @@ int Networking::configure(std::string ip, unsigned short port, unsigned short ap
     _ip = ip;
     _cmd_sender = CmdSender(_ip, port);
     _data_receiver = DataReceiver(_ip, aport);
-    _data_receiver = DataReceiver(_ip, aport);
     return 0;
 }
 
