@@ -364,7 +364,7 @@ void PrintAllRegs() {
 #endif  
 }
 
-unsigned GetDataIRQs(unsigned* data) {
+int GetDataIRQs(unsigned* data) {
     if(!data)
         return -1;
 
