@@ -31,3 +31,17 @@ if(COMPILE_TESTS)
 
   enable_testing(true)
 endif()
+
+find_program(CLANG_FORMAT clang-format)
+if(EXISTS ${CLANG_FORMAT})
+  add_custom_target(clangformat
+        COMMAND clang-format
+        -style=file
+        -i
+        ${ALL_FILES}
+  )
+
+  add_dependencies(${PROJECT_NAME} clangformat)
+else()
+  message(AUTHOR_WARNING "clang-format is not installed, auto formating will not be performed")
+endif()

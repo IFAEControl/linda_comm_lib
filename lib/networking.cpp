@@ -1,28 +1,25 @@
-#include <iostream>
-#include <sstream>
-#include <memory>
 #include <cstring>
+#include <iostream>
+#include <memory>
 #include <optional>
+#include <sstream>
 
 #include <Poco/Net/SocketStream.h>
 #include <Poco/StreamCopier.h>
 
-#include "networking.hpp"
 #include "log.hpp"
+#include "networking.hpp"
 
-#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V&& c)
+#define TEMPLATE_COMMAND(V) template V Networking::sendCommand<V>(V && c)
 
 using Poco::Net::IPAddress;
 using namespace CMD;
 
 FrameBuffer fb;
 
-CmdSender::CmdSender(const std::string& ip, unsigned short p) :
-    _sa{ip, p}
-{}
+CmdSender::CmdSender(const std::string& ip, unsigned short p) : _sa{ip, p} {}
 
-template<typename T>
-T CmdSender::sendCommand(T&& c) {
+template <typename T> T CmdSender::sendCommand(T&& c) {
     auto& m = c.getMessage();
     _socket.connect(_sa);
     _socket.sendBytes(&m.header, HEADER_BYTE_SIZE);
@@ -41,9 +38,8 @@ T CmdSender::sendCommand(T&& c) {
     return std::move(c);
 }
 
-DataReceiver::DataReceiver(const std::string& ip, unsigned short p) :
-    _sa{ip, p}
-{}
+DataReceiver::DataReceiver(const std::string& ip, unsigned short p)
+    : _sa{ip, p} {}
 
 int DataReceiver::initThread() {
     if(connect() < 0) return -1;
@@ -55,7 +51,6 @@ int DataReceiver::initThread() {
 
     return 0;
 }
-
 
 void DataReceiver::readerThread() {
     constexpr unsigned max_dgram_size = 57608; // 1920*30(chips) + 8(header size)
@@ -79,8 +74,10 @@ void DataReceiver::readerThread() {
             }
 
             auto number = header.number;
-            if(old_pnum.has_value() && uint16_t(number-1) != old_pnum) {
-                logger->warn("Packets lost. Last seen packet={}, current packet={}", old_pnum.value(), uint16_t(number-1));
+            if(old_pnum.has_value() && uint16_t(number - 1) != old_pnum) {
+                logger->warn(
+                    "Packets lost. Last seen packet={}, current packet={}",
+                    old_pnum.value(), uint16_t(number - 1));
             }
             old_pnum = number;
 
@@ -92,13 +89,12 @@ void DataReceiver::readerThread() {
         } catch(Poco::TimeoutException& e) {
             // ignore timeouts
         }
-    } 
+    }
 }
 
 bool DataReceiver::threadRunning() const {
     return _thread_running;
 }
-
 
 int DataReceiver::connect() {
     _dgs.connect(_sa);
@@ -150,7 +146,6 @@ int Networking::initialize(std::string ip, unsigned short port, unsigned short a
     return 0;
 }
 
-
 int Networking::initReceiverThread() {
     return _data_receiver.initThread();
 }
@@ -159,8 +154,7 @@ void Networking::joinThread() {
     _data_receiver.joinThread();
 }
 
-template<typename T>
-T Networking::sendCommand(T&& c) {
+template <typename T> T Networking::sendCommand(T&& c) {
     return std::move(_cmd_sender.sendCommand(std::move(c)));
 }
 
