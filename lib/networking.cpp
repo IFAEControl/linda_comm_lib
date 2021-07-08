@@ -102,9 +102,9 @@ int DataReceiver::connect() {
     _dgs.setReceiveTimeout(Poco::Timespan(1, 0));
 
     unsigned tries = 10;
-    for(int i = 0; i < tries; i++) {
+    for(unsigned i = 0; i < tries; i++) {
         // Tell the server we are listening
-        char c = 0xff;
+        unsigned char c = 0xff;
         _dgs.sendBytes(&c, 1);
 
         try {

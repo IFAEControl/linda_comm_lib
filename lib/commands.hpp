@@ -17,8 +17,8 @@ public:
     }
     
     template<typename T>
-    UnsignedArray(T& json) {
-        a = json;
+    UnsignedArray(T& j) {
+        a = j;
     }
 
     auto val() { return a; } 

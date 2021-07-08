@@ -113,9 +113,11 @@ std::size_t FrameBuffer::currFrames() const {
 }
 
 void FrameBuffer::incWriteFrame() {
-    _curr_write_frame = ++_curr_write_frame % CACHE_SIZE;
+    ++_curr_write_frame;
+    _curr_write_frame %= CACHE_SIZE;
 }
 
 void FrameBuffer::incReadFrame() {
-    _curr_read_frame = ++_curr_read_frame % CACHE_SIZE;
+    ++_curr_read_frame;
+    _curr_read_frame %= CACHE_SIZE;
 }
