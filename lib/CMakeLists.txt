@@ -34,7 +34,7 @@ if(COMPILE_TESTS)
 endif()
 
 find_program(CLANG_FORMAT clang-format)
-if(EXISTS ${CLANG_FORMAT})
+if(EXISTS ${CLANG_FORMAT} AND MSVC)
   add_custom_target(clangformat
         COMMAND clang-format
         -style=file
