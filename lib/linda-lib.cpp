@@ -56,7 +56,7 @@ std::pair<int, std::optional<T>> sendCmd(T& cmd) try {
     return {-2, {}};
 }
 
-int InitCommunication(const char* str, int sync_port, int async_port) {
+int InitCommunication(const char* str, int sync_port, int async_port, bool start_async_thread) {
 #ifdef DUMMY
     for (int i=0; i<5; i++)
         chip_register[i] = 0;
@@ -65,10 +65,13 @@ int InitCommunication(const char* str, int sync_port, int async_port) {
     return 0;
 #else
     logger->info("Connecting");
-    if(auto ret = n.configure(str, sync_port, async_port); ret)
+    if(auto ret = n.initialize(str, sync_port, async_port); ret)
         return ret;
-    if(n.initReceiverThread() < 0)
-        return -1;
+
+	if(start_async_thread) {
+		if(n.initReceiverThread() < 0)
+			return -1;
+	}
     return 0;
 #endif
 }

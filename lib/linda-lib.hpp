@@ -10,7 +10,7 @@
 
 extern "C" {
 
-DllExport int InitCommunication(const char* str, int sync_port, int async_port);
+DllExport int InitCommunication(const char* str, int sync_port, int async_port, bool start_async_thread);
 DllExport void CloseCommunication();
 DllExport int CameraReset();
 DllExport int ControllerReset();

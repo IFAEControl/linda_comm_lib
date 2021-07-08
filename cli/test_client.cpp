@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     if(argc == 2) 
         ip = argv[1];
 
-    InitCommunication(ip.c_str(), 32000, 32001);
+    InitCommunication(ip.c_str(), 32000, 32001, true);
 
 
         /*AcqInfo info{10,10,10,true,true,false};

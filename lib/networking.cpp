@@ -138,7 +138,7 @@ void DataReceiver::resetTimeouts() {
     _timeouts = 0;
 }
 
-int Networking::configure(std::string ip, unsigned short port, unsigned short aport) {
+int Networking::initialize(std::string ip, unsigned short port, unsigned short aport) {
     if(_data_receiver.threadRunning()) {
         logger->error("Already configured, doing nothing");
         return -1;
