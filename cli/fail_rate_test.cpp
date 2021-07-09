@@ -38,7 +38,7 @@ int RunACQ(unsigned short frames, unsigned bitmap) {
                 std::cout << "Error: UDP" << std::endl;
                 std::cout << "DMA_TIMEOUTS: " << dma_timeouts << " Error on IRQs: " << irq_err << " Packets lost: " << packets_lost << std::endl;
                 // packets lost, reconenct just in case
-                InitCommunication(ip.c_str(), 32000, 32001);
+                InitCommunication(ip.c_str(), 32000, 32001, true);
             }
         }
         std::cout << j << "/" << frames << " frames. Counter=" << counter << "\r";
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     if(argc == 2) 
         ip = argv[1];
 
-    InitCommunication(ip.c_str(), 32000, 32001);
+    InitCommunication(ip.c_str(), 32000, 32001, true);
 
 
     //if(ACQuisitionCont(info, 1) < 0) return -1;

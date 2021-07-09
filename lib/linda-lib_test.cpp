@@ -13,8 +13,8 @@ TEST_CASE("Simple test", "[lib]") {
    /* REQUIRE(std::get<0>(pid.update(0)) == 0);
     */
     SECTION("Executing init two times doesn't crash") {
-        InitCommunication("www.google.es", 80, 80);
-        InitCommunication("www.google.es", 80, 80);
+        InitCommunication("www.google.es", 80, 80, true);
+        InitCommunication("www.google.es", 80, 80, true);
         CloseCommunication();
     }
 

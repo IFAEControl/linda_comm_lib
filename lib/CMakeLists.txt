@@ -21,6 +21,10 @@ add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
 
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-temp ${CONAN_LIBS})
 
+if(NOT MSVC)
+	target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror -Wcast-qual -Wunreachable-code -Wfatal-errors -pedantic)
+endif()
+
 if(COMPILE_TESTS)
   add_library(Catch INTERFACE)
   target_include_directories(Catch INTERFACE)
@@ -30,4 +34,18 @@ if(COMPILE_TESTS)
   add_test(NAME TESTS COMMAND tests)
 
   enable_testing(true)
+endif()
+
+find_program(CLANG_FORMAT clang-format)
+if(EXISTS ${CLANG_FORMAT} AND NOT MSVC)
+  add_custom_target(clangformat
+        COMMAND clang-format
+        -style=file
+        -i
+        ${ALL_FILES}
+  )
+
+  add_dependencies(${PROJECT_NAME} clangformat)
+else()
+  message(AUTHOR_WARNING "clang-format is not installed, auto formating will not be performed")
 endif()

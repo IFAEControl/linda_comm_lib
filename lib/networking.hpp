@@ -49,7 +49,7 @@ private:
 
 class Networking {
 public:
-	int configure(std::string ip, unsigned short port, unsigned short aport);
+	int initialize(std::string ip, unsigned short port, unsigned short aport);
 	template<typename T> T sendCommand(T&& c);
 	int initReceiverThread();
 	void joinThread();
