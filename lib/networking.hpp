@@ -60,4 +60,3 @@ private:
 	CmdSender _cmd_sender;
 	DataReceiver _data_receiver;
 };
-

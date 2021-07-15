@@ -100,7 +100,6 @@ int DataReceiver::connect() {
     _dgs.connect(_sa);
     _dgs.setBlocking(true);
     _dgs.setReceiveTimeout(Poco::Timespan(1, 0));
-
     unsigned tries = 10;
     for(unsigned i = 0; i < tries; i++) {
         // Tell the server we are listening
